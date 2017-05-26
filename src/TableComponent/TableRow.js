@@ -100,7 +100,7 @@ class TableRow extends Component{
 		     	);
 
 		      }
-			  
+			
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
 			     	<td key={data.FullName}>
