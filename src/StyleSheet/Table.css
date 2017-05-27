@@ -5,7 +5,7 @@
     color: #513654;
     box-sizing: border-box;
 	padding:25px;
-	overflow:hidden;
+	
 }
 #scroll{
 	width: 100%;
@@ -114,4 +114,19 @@
 input[type=checkbox]{
 	margin-left:39%;
 	margin-top: 2px;
+}
+.add_contact_container{
+	margin-top: 50px;
+}
+.add_new_contact_form span{
+	display: inline-block;
+	width: 150px;
+}
+.add_new_contact_form label{
+	line-height: 2; 
+}
+#add_button{
+	background: forestgreen;
+	display: inline-block;
+	width: 100xp;
 }

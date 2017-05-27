@@ -8,7 +8,8 @@ class TableRow extends Component{
 		     this.state={
 		                editingShow:false,
 		                editRowData:{},
-		      			editRowIndex:""
+		      			editRowIndex:"",
+						  arrayData: this.props.dataArray
 		     			}
 			     this.deleteRow=this.deleteRow.bind(this);
 			     this.editRow=this.editRow.bind(this);
