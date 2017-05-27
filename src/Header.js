@@ -33,10 +33,10 @@ class Header extends Component{
                       <h1>BetBoard</h1>
                   </div>
                   <div className="user flex">
-                      <ul className="list flex">
+                      {/*<ul className="list flex">
                           <li className="list_item">Username</li>
                           <li className="list_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/login'>Log out</NavLink></li>
-                      </ul>
+                      </ul>*/}
                   </div>
               </div>
          </div>
@@ -47,10 +47,10 @@ class Header extends Component{
                  <div className="close_item"></div>
              </div>
              <ul className="menu_list">
-                 <li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/table'>Table</NavLink></li>
-                 <li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/addmailinglist'>MailList</NavLink></li>
+                <li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/table'>Table</NavLink></li>
+                {/*<li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/addmailinglist'>MailList</NavLink></li>
 				<li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/sendemails'> Send Email </NavLink></li>
-				<li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/login'>Log Out </NavLink></li>
+				<li className="menu_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/login'>Log Out </NavLink></li>*/}
 			</ul>
          </div>
       </div>

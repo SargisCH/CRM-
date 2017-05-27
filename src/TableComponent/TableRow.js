@@ -13,41 +13,54 @@ class TableRow extends Component{
 			     this.deleteRow=this.deleteRow.bind(this);
 			     this.editRow=this.editRow.bind(this);
 			     this.saveEditing=this.saveEditing.bind(this);
+				 this.checkBoxChange = this.checkBoxChange.bind(this)
 			     this.cancel=this.cancel.bind(this);
-			    // var editRowData={};
+				 //this.passDataPost = this.passDataPost.bind(this);
+
 		     }
 	     deleteRow(event){
-		      // console.log(event.target.id);
-		     //console.log(array);
-		     array.splice(event.target.id,1);
-		      //event.target.parentNode.parentNode.remove();
-		      this.props.update();
+		    array.splice(event.target.id,1);
+		    this.props.update();
 	     }
 	     editRow(event){
-		     console.log(event.target.id);
 		     this.setState({
-		     				editingShow:true,
-		     				editRowData:this.props.dataArray[event.target.id],
-		     				editRowIndex:event.target.id 
-		     				});
+		     	editingShow:true,
+		     	editRowData:this.props.dataArray[event.target.id],
+		     	editRowIndex:event.target.id 
+			});
 
 	     }
 	     saveEditing(){
 	      this.props.update();
 	      this.setState({
-		     				editingShow:false 
-		     				});
+		    editingShow:false 
+		  });
 
 	     }
 	     cancel(){
 	      this.props.update();
 	      this.setState({
-		     				editingShow:false 
-		     				});
+		     editingShow:false 
+		   });
 	     }
+		 /*passDataPost(){
+			 this.props.postData(this.props.sendArray);
+		 }*/
+		 checkBoxChange(event){
+			let index = event.target.id;
+			if(event.target.checked === true){
+				this.props.sendArray.push(this.props.dataArray[index].GuID);
+			}else{
+				for(let i in this.props.sendArray){
+					if(this.props.dataArray[index].GuID === this.props.sendArray[i]){
+						this.props.sendArray.splice(i, 1);
+					}
+				}
+			}
+			this.props.getSendData(this.props.sendArray)
+		 }
 	     render(){
 		     const data=this.props.dataArray
-		      //console.log("TableRow Data :",data);
 		      if(this.state.editingShow){
 		          const editingrow = data[this.state.editRowIndex];
 		          const editrow=
@@ -92,18 +105,21 @@ class TableRow extends Component{
 
 		     	
 		     	return(
+					 
+					 
 		     		<tbody>
+					 
 		     			{editrow}
 		     			{row}
-		     		
 		     		</tbody>
 		     	);
 
 		      }
-			
+			  
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
-			     	<td key={data.FullName}>
+					 <td><input className="check" onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
+			     	<td  key={data.FullName}>
 				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 				     	{data.FullName}
@@ -123,14 +139,15 @@ class TableRow extends Component{
 					 <td key={data.Email} id ="ids">
 			     	    {data.Email}
 			     	</td>
+					 
 			     	{/*<td colSpan="2"> <button id ={index} onClick={this.editRow} className="editbutton">Edit</button><button className ="deletebutton" onClick={this.deleteRow}  id={index}>Delete</button></td>*/}
 		     	</tr>
+				 
 		     	);
 		     	return(
-		     		<tbody>
-		     			{row}
-		     		
-		     		</tbody>
+					 	<tbody>
+						 	{row}
+						</tbody>
 		     	);
 		      
 

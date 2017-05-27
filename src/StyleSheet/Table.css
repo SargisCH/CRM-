@@ -99,11 +99,19 @@
     color: #666467;
     text-align: center;
     font-size: 1.5em;
-   
+	}
 }
-#scroll{
-	
-	
+.check{
+	float: left;
+	margin-top: 5px;
+	margin-left: 20px;
 }
-
+.send_button{
+	width:109px;
+	height: 35px;
+	margin-top: 30px;
+}
+input[type=checkbox]{
+	margin-left:39%;
+	margin-top: 2px;
 }
