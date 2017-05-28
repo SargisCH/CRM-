@@ -17,8 +17,6 @@
     margin: 0px auto;
     border: solid 2px #504b4b;
     border-collapse: collapse;
-	
-
 }
 .table td{
 	border:solid 2px #504b4b;
@@ -79,27 +77,22 @@
     cursor: pointer;
 	box-shadow: 0 0px 0px 0 rgba(56,38,0,1);
 }
-
-
 .btn_table:hover{
 	 background-color: #735a73; 
 }
 	
-	@media (max-width:768px) {
-
+@media (max-width:768px) {
 	.UserTable{
 		width:100%;
 	}
-
 }
-
 @media (max-width:468px) {
-#theader{
-	height: 30px;
-    color: #666467;
-    text-align: center;
-    font-size: 1.5em;
-	}
+	#theader{
+		height: 30px;
+		color: #666467;
+		text-align: center;
+		font-size: 1.5em;
+		}
 }
 .check{
 	float: left;
@@ -130,3 +123,4 @@ input[type=checkbox]{
 	display: inline-block;
 	width: 100xp;
 }
+
