@@ -17,6 +17,7 @@ class TableHeader extends Component{
 					<tr >
 						<th className="select">Select</th>
 						{header}
+						<th> Actions</th>
 					</tr>
 				</thead>
 		 	);

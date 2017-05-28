@@ -12,11 +12,11 @@ return new Promise((resolve, reject) => {
           .then(response => resolve(response.text(), err => reject(err)))   
     }) 
   }
-    static putData(url,data){
+    static deleteData(url,id){
     return new Promise((resolve,reject) =>{
-      fetch(url,{method: "PUT", headers: {'Accept': 'application/json',
+      fetch(url,{method: "DELETE", headers: {'Accept': 'application/json',
           'Content-Type': 'application/json'}, 
-          body: JSON.stringify(data)})
+          body: JSON.stringify(id)})
           .then(response => resolve(response.text(), err => reject(err)))   
     }) 
   }
