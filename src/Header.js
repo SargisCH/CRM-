@@ -1,6 +1,6 @@
 import './StyleSheet/Header.css';
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+//import { NavLink } from 'react-router-dom';
 import Menu from './Menu.js';
 class Header extends Component{
     constructor(){

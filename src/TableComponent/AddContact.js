@@ -15,7 +15,7 @@ class AddContact extends Component{
                 this.setState({addContactBool: !this.state.addContactBool})
             }
             addNewContact(event){
-                event.preventDefault;
+                //event.preventDefault;
                 let arrayCheckRefs = [];
                 for(let i in this.refs){
                     arrayCheckRefs.push(this.refs[i].value)

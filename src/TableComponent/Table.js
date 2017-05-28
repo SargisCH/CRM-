@@ -3,12 +3,13 @@ import TableHeader from'./TableHeader.js';
 import TableRow from './TableRow.js';
 import AddContact from './AddContact.js';
 import '../StyleSheet/Table.css';
-import Ajax from '../Ajax.js';
+//import Ajax from '../Ajax.js';
+import call from '../helpers/call.js'
 
 class Table extends Component{
 			constructor(props){
 				super(props);
-				this.state = {data:[] /*deleteData:""*/}
+				this.state = {data:[],sendData:[] /*deleteData:""*/}
 				//this.updateTable=this.updateTable.bind(this);
 				this.postData = this.postData.bind(this);
 				this.getSendData = this.getSendData.bind(this);
@@ -18,31 +19,42 @@ class Table extends Component{
 
 			}
 			componentDidMount(){
+				let self = this;
 				//let that = this;
-				Ajax.getData('http://crmbetc.azurewebsites.net/api/contacts').then(response => this.setState({data: response}));
+				//Ajax.getData('http://crmbetc.azurewebsites.net/api/contacts').then(response => this.setState({data: response}));
+				call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})})
 			}
 			getSendData(sendData){
-				this.state.sendData = sendData
+				this.setState({sendData :sendData})
 			}
 			deleteData(deleteData, deleteIndex){
 				let deleteArray = this.state.data;
 				deleteArray.splice(deleteIndex,1);
 				this.setState({data: deleteArray})
-				Ajax.deleteData('http://crmbetc.azurewebsites.net/api/contacts?id=' + deleteData);
+				//Ajax.deleteData('http://crmbetc.azurewebsites.net/api/contacts?id=' + deleteData);
+				call('api/contacts?id=' + deleteData, "DELETE");
 			}
 			postData(sendData){
 				sendData = this.state.sendData;
-				Ajax.postData('http://crmbetc.azurewebsites.net/api/sendemails?template=1', sendData )
+				call('api/sendemails?template=1','POST', sendData);
+				//Ajax.postData('http://crmbetc.azurewebsites.net/api/sendemails?template=1', sendData )
+				//call('api/sendemails?template=1','POST').then(response => {  response.error ? alert(response.message) : self.setState({data: response})})
 			/*if(sendData && sendData.length > 0 ){
 					this.state.sendData = [];
 					console.log(sendData);
 				}*/
 			}
 			getNewContacts(newContactobj){
+				let self = this;
 				let newData = this.state.data;
 				newData.push(newContactobj);
-				Ajax.postData('http://crmbetc.azurewebsites.net/api/contacts', newContactobj);
+				//Ajax.postData('http://crmbetc.azurewebsites.net/api/contacts', newContactobj);
+				call('api/contacts','POST',newContactobj);
 				this.setState({data: newData});
+				setTimeout(function(){
+					call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})},500)		
+				})
+				
 			}
 			/*updateTable(){
 		      this.getData()

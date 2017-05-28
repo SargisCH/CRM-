@@ -47,6 +47,7 @@ class TableRow extends Component{
 		 deleteContacts(event){
 			let index = event.target.id;
 			let deleteGuid = this.props.dataArray[index].GuID;
+			console.log(deleteGuid)
 			this.props.deleteData(deleteGuid, index)
 		 }
 		 checkBoxChange(event){
