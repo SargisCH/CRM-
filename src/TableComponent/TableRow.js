@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import EditRow from './EditRow.js';
 
-
 class TableRow extends Component{
-		     constructor(props){
-			     super(props);
-		     this.state={
-		                editingShow:false,
-		                editRowData:{},
-		      			editRowIndex:""
-						 
-		     			}
-				 this.checkBoxChange = this.checkBoxChange.bind(this)
-				 this.deleteContacts = this.deleteContacts.bind(this)
-				 //this.passDataPost = this.passDataPost.bind(this);
-
-		     }
+	constructor(props){
+		super(props);
+		this.state={
+				editingShow:false,
+				editRowData:{},
+				editRowIndex:"",
+		}
+		this.checkBoxChange = this.checkBoxChange.bind(this)
+		this.deleteContacts = this.deleteContacts.bind(this)
+		//this.passDataPost = this.passDataPost.bind(this);
+}
 /*	     deleteRow(event){
 		    array.splice(event.target.id,1);
 		    this.props.update();
@@ -44,6 +41,9 @@ class TableRow extends Component{
 		 passDataPost(){
 			 this.props.postData(this.props.sendArray);
 		 }*/
+		 changeCheck(){
+			this.setState({checked:!this.state.checked})
+		}
 		 deleteContacts(event){
 			let index = event.target.id;
 			let deleteGuid = this.props.dataArray[index].GuID;
