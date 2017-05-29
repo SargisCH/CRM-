@@ -41,9 +41,9 @@ class TableRow extends Component{
 		 passDataPost(){
 			 this.props.postData(this.props.sendArray);
 		 }*/
-		 changeCheck(){
-			this.setState({checked:!this.state.checked})
-		}
+		//  changeCheck(){
+		// 	this.setState({checked:!this.state.checked})
+		// }
 		 deleteContacts(event){
 			let index = event.target.id;
 			let deleteGuid = this.props.dataArray[index].GuID;
@@ -120,15 +120,15 @@ class TableRow extends Component{
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
 					 <td><input className="check" onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
-			     	<td  key={data.FullName}>
+			     	<td  key={data.fullName}>
 				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-				     	{data.FullName}
+				     	{data['Full Name']}
 			     	</td>
-			     	<td key={data.CompanyName}>
+			     	<td key={data.companyName}>
 				     	<EditRow update={this.props.update} data={data.Lastname} propName="Lastname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-				     	{data.CompanyName}
+				     	{data['Company Name']}
 				     </td>
 			     	<td key={data.Position}>
 			     	    <EditRow update={this.props.update} data={data.Mail} propName="Mail" editingData={this.state.editRowData} show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>

@@ -34,7 +34,7 @@ class Table extends Component{
 		deleteArray.splice(deleteIndex,1);
 		this.setState({data: deleteArray})
 		//Ajax.deleteData('http://crmbetc.azurewebsites.net/api/contacts?id=' + deleteData);
-		call('api/contacts?id=' + deleteData, "DELETE");
+		call('api/contacts?guid=' + deleteData, "DELETE");
 	}
 	postData(sendData){
 		sendData = this.state.sendData;
@@ -49,12 +49,16 @@ class Table extends Component{
 	getNewContacts(newContactobj){
 		let self = this;
 		let newData = this.state.data;
+		console.log(newData)
 		newData.push(newContactobj);
+		console.log(newData);
 		//Ajax.postData('http://crmbetc.azurewebsites.net/api/contacts', newContactobj);
-		call('api/contacts','POST',newContactobj);
-		this.setState({data: newData});
+		call('api/contacts','POST',newContactobj).then(()=> this.setState({data: newData}))
+		
+		
 		setTimeout(function(){
-			call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})},500)		
+			
+			call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response});console.log("sadadas")},5000);
 		})
 		
 	}
@@ -63,16 +67,29 @@ class Table extends Component{
 	}*/
 	render(){
 		return (<div className="UserTable">
-			<div id="theader">User Info List</div>
+			{/*<div id="theader">User Info List</div>*/}
 				<table className="table">
 				<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
 				<TableRow  getSendData={this.getSendData} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
 				</table>
-				<button onClick={this.props.changeCheck}  className="send_button btn_table">Send</button>
+				<button  onClick={this.postData} className="send_button btn_table">Send</button>
 				<AddContact getNewContacts={this.getNewContacts}/>
+
 			</div>
 		)
 	}
 }
 export default Table;
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
+		     	
 		     	

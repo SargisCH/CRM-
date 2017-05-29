@@ -13,7 +13,7 @@ class AddContact extends Component{
         this.setState({addContactBool: !this.state.addContactBool})
     }
     addNewContact(event){
-        //event.preventDefault;
+        event.preventDefault;
         let arrayCheckRefs = [];
         for(let i in this.refs){
             arrayCheckRefs.push(this.refs[i].value)
@@ -53,7 +53,7 @@ class AddContact extends Component{
                         <span>Country:</span> <input ref="country" id="country" type="text" required/>
                     </label>
                     <label htmlFor="email"><br/>
-                        <span>Email:</span> <input ref="email" id="email" type="email" required/>
+                        <span>Email:</span> <input ref="email" id="email" type="text" required/>
                     </label> <br/> 
                     <button onClick={this.addNewContact}  className='btn_table' id="add_button"> Add </button>
                     <button onClick={this.changeAddContact}   className='btn_table' id="add_button"> Cancel </button>                          
