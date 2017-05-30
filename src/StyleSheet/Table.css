@@ -7,6 +7,12 @@
 	padding:25px;
 	
 }
+button:disabled{
+  background-color: #cccccc;
+  color: #666666;
+  pointer-events: none;
+}
+
 #scroll{
 	width: 100%;
     height: 80%;
@@ -28,20 +34,15 @@
 	border-collapse: collapse;
 	text-align: center;
 }
-.tableheader{
+/*.tableheader{
 	width: 100%;
 	text-align: center;
 	color: white;
-}
+}*/
 .addtablerow{
 	width: 100%;
 }
-.editbutton{
-	border-radius: 5px;
-	background: #009688;
-	color: white;
-	margin: 5px;
-}
+
 #theader{
 	height: 30px;
     color: #666467;
@@ -62,7 +63,7 @@
     border-radius: .1rem;
 	border: 0px solid transparent;
     transition: .5s;
-    cursor: pointer;
+	cursor:pointer;
 	box-shadow: 0 0px 0px 0 rgba(56,38,0,1);
 }
 .btn_table:hover{
@@ -118,9 +119,6 @@ input[type=checkbox]{
 .delete_button{
 	background: #e91e63;
 	margin-left: 15px;
-}
-.delete_button:hover{
-	background: #e91e63;
 }
 .create_email_list{
 	margin-left: 20px;

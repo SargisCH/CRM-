@@ -70,7 +70,9 @@ class TableRow extends Component{
 					}
 				}
 			}
-			this.props.getSendData(sendArray )
+			this.props.getSendData(sendArray);
+			this.props.isDisable(sendArray);
+			console.log(sendArray)
 		 }
 		 save(){
 			let savedData= {
@@ -194,7 +196,7 @@ class TableRow extends Component{
 			  const data=this.props.dataArray
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
-					 <td><input className="check" onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
+					 <td><input className="check" onClick={this.props.isDisable} onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
 			     	<td  key={data.fullName}>
 				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
