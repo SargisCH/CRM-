@@ -5,7 +5,6 @@ class TableRow extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-				//dataArray:this.props.dataArray,
 				savedData: {},
 				savedId: "",
 				editMode: false,
@@ -13,66 +12,29 @@ class TableRow extends Component{
 				editRowIndex:"",
 				sendArray : this.props.dataArray,
 				id:[],
+				checkBoxes:[]
 		}
 		this.checkBoxChange = this.checkBoxChange.bind(this)
 		this.changeEditMode =this.changeEditMode.bind(this)
 		this.editOnClicks =this.editOnClicks.bind(this)
 		this.save = this.save.bind(this)
-
-		//this.edit = this.edit.bind(this)
-		//this.passDataPost = this.passDataPost.bind(this);
 }
-/*	     deleteRow(event){
-		    array.splice(event.target.id,1);
-		    this.props.update();
-	     }
-	     editRow(event){
-		     this.setState({
-		     	editingShow:true,
-		     	editRowData:this.props.dataArray[event.target.id],
-		     	editRowIndex:event.target.id 
-			});
-
-	     }
-	     saveEditing(){
-	      this.props.update();
-	      this.setState({
-		    editingShow:false 
-		  });
-
-	     }
-	     cancel(){
-	      this.props.update();
-	      this.setState({
-		     editingShow:false 
-		   });
-	     }
-		 passDataPost(){
-			 this.props.postData(this.props.sendArray);
-		 }*/
-		//  changeCheck(){
-		// 	this.setState({checked:!this.state.checked})
-		// }
 		 checkBoxChange(event){
 			let index = event.target.id;
 			let sendArray = this.state.sendArray;
-			//let id = this.state.id;
+			this.state.checkBoxes.push(event.target);
 			if(event.target.checked === true){
 				sendArray.push(this.props.dataArray[index].GuID);
 				this.setState({sendArray: sendArray})
 			}else{
-				console.log("sada")
-				//id.splice(index, 1)
 				for(let i in sendArray){
 					if(this.props.dataArray[index].GuID === sendArray[i]){
 						sendArray.splice(i, 1);
-						//this.setState({sendArray:sendArray})
 					}
 				}
 			}
-			this.props.getSendData(sendArray);
+			this.props.getSendData(sendArray, this.state.checkBoxes);
 			this.props.isDisable(sendArray);
-			console.log(sendArray)
 		 }
 		 save(){
 			let savedData= {
@@ -141,62 +103,10 @@ class TableRow extends Component{
 			 }
 		 }
 	     render(){
-			 //this.state.arrayData = this.props.dataArray
-/*		      if(this.state.editingShow){
-		          const editingrow = data[this.state.editRowIndex];
-		          const editrow=
-		     	<tr  id ="editingrow">
-			     	<td key={editingrow.Firstname}>
-				     	<EditRow update={this.props.update} data={editingrow.Firstname} propName="Firstname" editingData={this.state.editRowData} 
-				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-				     
-			     	</td>
-			     	<td key={editingrow.Lastname}>
-				     	<EditRow update={this.props.update} data={editingrow.Lastname} propName="Lastname" editingData={this.state.editRowData} 
-				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-				     	
-				     </td>
-			     	<td key={editingrow.Mail}>
-			     	    <EditRow update={this.props.update} data={editingrow.Mail} propName="Mail" editingData={this.state.editRowData} show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-			     	    
-			     	</td>
-			     	<td key={editingrow.Id} id ="ids">
-			     	   {editingrow.Id}
-			     	</td>
-			     	<td colSpan="2"><button onClick={this.saveEditing} className="savebutton" >Save Change</button><button onClick={this.cancel}>Cancel</button></td>
-		     	</tr>
-		     	 const row = data.map((data,index)=>
-		     	
-		     	<tr key={index} ref={index}>
-			     	<td key={data.Firstname}>
-				     	{data.Firstname}
-			     	</td>
-			     	<td key={data.Lastname}>
-				     	{data.Lastname}
-				     </td>
-			     	<td key={data.Mail}>
-			     	    {data.Mail}
-			     	</td>
-			     	<td key={data.Id} id ="ids">
-			     	    {data.Id}
-			     	</td>
-			     	<td colSpan="2"><button className ="deletebutton" onClick={this.deleteRow}  id={index}>Delete</button><button id ={index} onClick={this.editRow}>Edit</button></td>
-		     	</tr>
-		     	);
-
-		     	
-		     	return(
-		     		<tbody>
-					 
-		     			{editrow}
-		     			{row}
-		     		</tbody>
-		     	);
-		      }*/
 			  const data=this.props.dataArray
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
-					 <td><input className="check" onClick={this.props.isDisable} onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
+					 <td><input className="check"  onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
 			     	<td  key={`${data['Full Name']}Full Name`}>
 				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
@@ -218,7 +128,6 @@ class TableRow extends Component{
 					 
 			     	    {data.Email}
 			     	</td>
-			     	{/*<td colSpan="2"> <button id ={index} onClick={this.editRow} className="editbutton">Edit</button></td>*/}
 					<td key="edit" id ="ids">
 						 {this.editRender(index)}
 						   

@@ -12,28 +12,28 @@ class Table extends Component{
 			data: [],
 			sendData: [],
 			disabled: true,
-			namingEmailList: false
+			namingEmailList: false,
+			checkBoxes:[],
+			templates: [],
+			showTemplate: false
 			/*deleteData:""*/
 		}
-		//this.updateTable=this.updateTable.bind(this);
 		this.postData = this.postData.bind(this);
 		this.getSendData = this.getSendData.bind(this);
-		//this.addData= this.addData.bind(this);
 		this.deleteContacts = this.deleteContacts.bind(this);
 		this.getNewContacts = this.getNewContacts.bind(this);
 		this.createEmailList = this.createEmailList.bind(this)
 		this.changeNamilngList =this.changeNamilngList.bind(this);
 		this.savedData = this.savedData.bind(this);
 		this.isDisable = this.isDisable.bind(this);
-
 	}
 	componentDidMount(){
 		let self = this;
 		//let that = this;
 		//Ajax.getData('http://crmbetc.azurewebsites.net/api/contacts').then(response => this.setState({data: response}));
-		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})})
+		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})});
+		call('api/templates','GET').then(response=>this.setState({templates : response}));
 	}
-	
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
 	}
@@ -56,8 +56,9 @@ class Table extends Component{
 			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} disabled={this.state.disabled}> Create New Mailing List </button>
 		}
 	}
-	getSendData(sendData){
-		this.setState({sendData :sendData})
+	getSendData(sendData, checkBoxes){
+		this.setState({sendData :sendData});
+		this.setState({checkBoxes: checkBoxes})
 	}
 	isDisable(sendData){
 		if(sendData.length>0){
@@ -78,6 +79,11 @@ class Table extends Component{
 		 }
 		 this.setState({data:deleteData})
 		 call('api/contacts','DELETE', sendDeleteData);
+		 		let checkBoxes = this.state.checkBoxes;
+		for(let i in checkBoxes){
+			checkBoxes[i].checked = false
+		}
+		this.setState({checkBoxes: checkBoxes})
 	}
 	savedData(obj, id){
 		let savedData = this.state.data;
@@ -88,7 +94,13 @@ class Table extends Component{
 		sendData = this.state.sendData;
 		console.log(sendData)
 		call('api/sendemails?template=1','POST', sendData);
-	}
+		let checkBoxes = this.state.checkBoxes;
+		for(let i in checkBoxes){
+			checkBoxes[i].checked = false
+		}
+		this.setState({checkBoxes: checkBoxes})
+		this.setState({disabled:true})
+	}	
 	getNewContacts(newContactobj){
 		let self = this;
 		let newData = this.state.data;
@@ -100,7 +112,7 @@ class Table extends Component{
 				<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
 				<TableRow  savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
 				</table>
-				<button  onClick={this.postData} className="send_button btn_table"  disabled={this.state.disabled}>Send</button>
+				<button  onClick={this.postData} className="send_button btn_table"  disabled={this.state.disabled}>Send Email</button>
 				<button  className="btn_table delete_button" onClick={this.deleteContacts} disabled={this.state.disabled}> Delete</button>
 				{this.createEmailListRender()}
 				<AddContact getNewContacts={this.getNewContacts}/>
@@ -108,17 +120,4 @@ class Table extends Component{
 		)
 	}
 }
-export default Table;
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
-		     	
+export default Table;	     	
