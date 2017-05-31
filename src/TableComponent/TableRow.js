@@ -76,8 +76,8 @@ class TableRow extends Component{
 		 }
 		 save(){
 			let savedData= {
-				'Full Name': this.refs.first_name_edit.value + " " + this.refs.last_name_edit.value,
-				'Company Name': this.refs.company_name_edit.value,
+				FullName: this.refs.first_name_edit.value + " " + this.refs.last_name_edit.value,
+				CompanyName: this.refs.company_name_edit.value,
 				Position: this.refs.position_edit.value,
 				Country: this.refs.country_edit.value,
 				Email: this.refs.email_edit.value,
@@ -197,24 +197,25 @@ class TableRow extends Component{
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
 					 <td><input className="check" onClick={this.props.isDisable} onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
-			     	<td  key={data.fullName}>
+			     	<td  key={`${data['Full Name']}Full Name`}>
 				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 				     	{data['Full Name']}
 			     	</td>
-			     	<td key={data.companyName}>
+			     	<td key={`${data['Company Name']}Company Name`}>
 				     	<EditRow update={this.props.update} data={data.Lastname} propName="Lastname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 				     	{data["Company Name"]}
 				     </td>
-			     	<td key={data.Position}>
+			     	<td key={`${data.Position}position`} >
 			     	    <EditRow update={this.props.update} data={data.Mail} propName="Mail" editingData={this.state.editRowData} show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 			     	    {data.Position}
 			     	</td>
-			     	<td key={data.Country} id ="ids">
+			     	<td key={`${data.Country}country`}  id ="ids">
 			     	    {data.Country}
 			     	</td>
-					 <td key={data.Email} id ="ids">
+					 <td key={`${data.Email}email`} id ="ids">
+					 
 			     	    {data.Email}
 			     	</td>
 			     	{/*<td colSpan="2"> <button id ={index} onClick={this.editRow} className="editbutton">Edit</button></td>*/}

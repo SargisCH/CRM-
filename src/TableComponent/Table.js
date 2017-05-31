@@ -58,26 +58,14 @@ class Table extends Component{
 	}
 	getSendData(sendData){
 		this.setState({sendData :sendData})
-		
-		//console.log(sendData)
 	}
 	isDisable(sendData){
-		
 		if(sendData.length>0){
 			this.setState({disabled:false})
 		} else {
 			this.setState({disabled:true})
 		}
 	}	
-			
-
-/*	deleteData(deleteData, deleteIndex){
-		let deleteArray = this.state.data;
-		deleteArray.splice(deleteIndex,1);
-		this.setState({data: deleteArray})
-		//Ajax.deleteData('http://crmbetc.azurewebsites.net/api/contacts?id=' + deleteData);
-		call('api/contacts?guid=' + deleteData, "DELETE");
-	}*/
 	deleteContacts(sendDeleteData){
 		 sendDeleteData = this.state.sendData;
 		 let deleteData = this.state.data;
@@ -88,38 +76,25 @@ class Table extends Component{
 				 }
 			 }
 		 }
-		 console.log(deleteData)
 		 this.setState({data:deleteData})
-		 console.log(sendDeleteData)
 		 call('api/contacts','DELETE', sendDeleteData);
 	}
 	savedData(obj, id){
 		let savedData = this.state.data;
-		savedData[id] = obj;
-		this.setState({data: savedData}) ;
+		call('api/contacts','PUT', obj).then(response=>{savedData[id]=response;this.setState({data: savedData})});
+		
 	}
 	postData(sendData){
 		sendData = this.state.sendData;
 		console.log(sendData)
 		call('api/sendemails?template=1','POST', sendData);
-		
-		//Ajax.postData('http://crmbetc.azurewebsites.net/api/sendemails?template=1', sendData )
-		//call('api/sendemails?template=1','POST').then(response => {  response.error ? alert(response.message) : self.setState({data: response})})
-		/*if(sendData && sendData.length > 0 ){
-			this.state.sendData = [];
-			console.log(sendData);
-		}*/
 	}
 	getNewContacts(newContactobj){
 		let self = this;
 		let newData = this.state.data;
 		call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); this.setState({data:newData})})
 	}
-	/*updateTable(){
-		this.getData()
-	}*/
 	render(){
-		//{console.log("this.state.data",this.state.data)}
 		return (<div className="UserTable">
 				<table className="table">
 				<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
