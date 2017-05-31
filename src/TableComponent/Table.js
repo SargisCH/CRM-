@@ -83,7 +83,7 @@ class Table extends Component{
 		 let deleteData = this.state.data;
 		 for(let i in sendDeleteData){
 			 for(let j in deleteData){
-				 if(sendDeleteData[i] === deleteData[j].guID){
+				 if(sendDeleteData[i] === deleteData[j].GuID){
 					 deleteData.splice(j,1)
 				 }
 			 }

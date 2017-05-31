@@ -58,13 +58,13 @@ class TableRow extends Component{
 			let sendArray = this.state.sendArray;
 			//let id = this.state.id;
 			if(event.target.checked === true){
-				sendArray.push(this.props.dataArray[index].guID);
+				sendArray.push(this.props.dataArray[index].GuID);
 				this.setState({sendArray: sendArray})
 			}else{
 				console.log("sada")
 				//id.splice(index, 1)
 				for(let i in sendArray){
-					if(this.props.dataArray[index].guID === sendArray[i]){
+					if(this.props.dataArray[index].GuID === sendArray[i]){
 						sendArray.splice(i, 1);
 						//this.setState({sendArray:sendArray})
 					}
@@ -76,12 +76,12 @@ class TableRow extends Component{
 		 }
 		 save(){
 			let savedData= {
-				'full Name': this.refs.first_name_edit.value + " " + this.refs.last_name_edit.value,
-				'company Name': this.refs.company_name_edit.value,
-				position: this.refs.position_edit.value,
-				country: this.refs.country_edit.value,
-				email: this.refs.email_edit.value,
-				guID: this.state.savedGuId
+				'Full Name': this.refs.first_name_edit.value + " " + this.refs.last_name_edit.value,
+				'Company Name': this.refs.company_name_edit.value,
+				Position: this.refs.position_edit.value,
+				Country: this.refs.country_edit.value,
+				Email: this.refs.email_edit.value,
+				GuID: this.state.savedGuId
 
 			} ;
 			this.props.savedData(savedData, this.state.savedId);
@@ -101,13 +101,13 @@ class TableRow extends Component{
 			let editableObject = this.props.dataArray[index];
 			this.setState({editData: editableObject});
 			this.setState({savedId: index })
-			this.setState({savedGuId: this.props.dataArray[index].guID})
+			this.setState({savedGuId: this.props.dataArray[index].GuID})
 		 }
 		 editRender(id, event){
 			 if(this.state.editMode){
 				 let placeholders = this.state.editData; 
-				 let firstName  = placeholders['full Name'].slice(0, placeholders['full Name'].indexOf(' '))
-				 let lastName = placeholders['full Name'].slice(placeholders['full Name'].indexOf(' '), placeholders['full Name'].length);
+				 let firstName  = placeholders['Full Name'].slice(0, placeholders['Full Name'].indexOf(' '))
+				 let lastName = placeholders['Full Name'].slice(placeholders['Full Name'].indexOf(' '), placeholders['Full Name'].length);
 				 return (
 					 <div className="edit_block">
 						<div className="edit_form_block">
@@ -119,16 +119,16 @@ class TableRow extends Component{
 									<span>Last name:</span> <input ref="last_name_edit"  defaultValue={lastName} id="last_name_edit" type="text" required/>
 								</label>
 								<label htmlFor="company_name_edit"><br/>                
-									<span>Company name:</span> <input ref="company_name_edit" defaultValue={placeholders['company Name']} id="company_name_edit" type="text" required/>
+									<span>Company name:</span> <input ref="company_name_edit" defaultValue={placeholders['Company Name']} id="company_name_edit" type="text" required/>
 								</label>
 								<label htmlFor="position_edit"><br/>                
-									<span>Position:</span> <input ref="position_edit" defaultValue={placeholders['position']} id="position_edit" type="text" required/>
+									<span>Position:</span> <input ref="position_edit" defaultValue={placeholders['Position']} id="position_edit" type="text" required/>
 								</label>
 								<label htmlFor="country_edit"><br/>     
-									<span>Country:</span> <input ref="country_edit" defaultValue={placeholders['country']} id="country_edit" type="text" required/>
+									<span>Country:</span> <input ref="country_edit" defaultValue={placeholders['Country']} id="country_edit" type="text" required/>
 								</label>
 								<label htmlFor="email_edit"><br/>
-									<span>Email:</span> <input ref="email_edit" defaultValue={placeholders['email']} id="email_edit" type="text" required/>
+									<span>Email:</span> <input ref="email_edit" defaultValue={placeholders['Email']} id="email_edit" type="text" required/>
 								</label> <br/> 
 								<button onClick={this.save}>Save</button>
 								<button onClick={this.changeEditMode}>Cancel</button>
@@ -200,22 +200,22 @@ class TableRow extends Component{
 			     	<td  key={data.fullName}>
 				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-				     	{data['full Name']}
+				     	{data['Full Name']}
 			     	</td>
 			     	<td key={data.companyName}>
 				     	<EditRow update={this.props.update} data={data.Lastname} propName="Lastname" editingData={this.state.editRowData} 
 				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-				     	{data["company Name"]}
+				     	{data["Company Name"]}
 				     </td>
 			     	<td key={data.Position}>
 			     	    <EditRow update={this.props.update} data={data.Mail} propName="Mail" editingData={this.state.editRowData} show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
-			     	    {data.position}
+			     	    {data.Position}
 			     	</td>
 			     	<td key={data.Country} id ="ids">
-			     	    {data.country}
+			     	    {data.Country}
 			     	</td>
 					 <td key={data.Email} id ="ids">
-			     	    {data.email}
+			     	    {data.Email}
 			     	</td>
 			     	{/*<td colSpan="2"> <button id ={index} onClick={this.editRow} className="editbutton">Edit</button></td>*/}
 					<td key="edit" id ="ids">
