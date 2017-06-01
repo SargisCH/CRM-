@@ -14,8 +14,9 @@ class Table extends Component{
 			disabled: true,
 			namingEmailList: false,
 			checkBoxes:[],
-			templates: [],
-			showTemplate: false
+			templateData:null,
+			template: false,
+			templateId:''
 			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
@@ -26,13 +27,15 @@ class Table extends Component{
 		this.changeNamilngList =this.changeNamilngList.bind(this);
 		this.savedData = this.savedData.bind(this);
 		this.isDisable = this.isDisable.bind(this);
+		this.createTemplates = this.createTemplates.bind(this);
+		this.changeTemplateState = this.changeTemplateState.bind(this);
+		this.radioChange = this.radioChange.bind(this);
 	}
 	componentDidMount(){
 		let self = this;
-		//let that = this;
-		//Ajax.getData('http://crmbetc.azurewebsites.net/api/contacts').then(response => this.setState({data: response}));
 		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})});
-		call('api/templates','GET').then(response=>this.setState({templates : response}));
+		call('api/templates','GET')
+		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})});
 	}
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
@@ -83,7 +86,8 @@ class Table extends Component{
 		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
 		}
-		this.setState({checkBoxes: checkBoxes})
+		this.setState({checkBoxes: checkBoxes});
+		this.setState({disabled:true});
 	}
 	savedData(obj, id){
 		let savedData = this.state.data;
@@ -93,18 +97,65 @@ class Table extends Component{
 	postData(sendData){
 		sendData = this.state.sendData;
 		console.log(sendData)
-		call('api/sendemails?template=1','POST', sendData);
+		call('api/sendemails?template='+this.state.templateId,'POST', sendData);
 		let checkBoxes = this.state.checkBoxes;
 		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
 		}
 		this.setState({checkBoxes: checkBoxes})
 		this.setState({disabled:true})
+		this.changeTemplateState;
 	}	
 	getNewContacts(newContactobj){
 		let self = this;
 		let newData = this.state.data;
 		call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); this.setState({data:newData})})
+	}
+	changeTemplateState(){
+		this.setState({template: !this.state.template})
+	}
+	createTemplates(){
+		if(this.state.template){
+			const templateArr = this.state.templateData;
+			let templateNames = [];
+			let templateIds = [];
+			for(let i of templateArr){
+				templateNames.push(i.TemplateName)
+				templateIds.push(i.TemplateId)
+			}
+			for(let j = 0; j < templateNames.length; j++){
+				templateNames[j] = templateNames[j].slice(0,-5);
+				templateNames[j] = templateNames[j].split(/(?=[A-Z])/).join(" ");
+
+			}
+				// console.log(templateNames)
+			let templateName = templateNames.map((templateNames,index)=>
+				<label key={index}>
+					<input type="radio" name="selection" onChange={this.radioChange} id={templateIds[index]} value={templateNames}/>
+					{templateNames}<br/>
+				</label>	
+					)
+				//console.log(this.state.templateId);
+			return (
+				<div className="templateBlock">
+					<div className="template">
+						<form type="radio" name="selection" className="templateForm">
+							{templateName}
+						</form>
+						<button onClick={this.postData} onClick={this.changeTemplateState}> Send </button>
+						<button onClick={this.changeTemplateState}> Cancel </button>
+					</div>
+				</div>
+			)
+		}
+	}
+	radioChange(event){
+		const templateArr = this.state.templateData;
+		if(event.target.checked === true){
+			this.setState({templateId:event.target.id})
+		}
+		
+		//console.log(event.target.checked);
 	}
 	render(){
 		return (<div className="UserTable">
@@ -112,7 +163,8 @@ class Table extends Component{
 				<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
 				<TableRow  savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
 				</table>
-				<button  onClick={this.postData} className="send_button btn_table"  disabled={this.state.disabled}>Send Email</button>
+				<button  onClick={this.changeTemplateState} className="send_button btn_table"  disabled={this.state.disabled}>Choose template</button>
+				{this.createTemplates()}
 				<button  className="btn_table delete_button" onClick={this.deleteContacts} disabled={this.state.disabled}> Delete</button>
 				{this.createEmailListRender()}
 				<AddContact getNewContacts={this.getNewContacts}/>
