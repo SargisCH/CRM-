@@ -151,3 +151,38 @@
 		width: 90%;
 	}
 }
+.mailing_list_container{
+	margin-top: 50px;
+	margin-left: 50px;
+}
+.choose_mailing_list p{
+	margin: 0;
+	padding: 0;
+}
+.mailLingListSelection{
+	position: relative;
+}
+.mailingListItemsContainer{
+	position: absolute
+}
+.fa-caret-down{
+	float: right
+}
+#defaultMailingList{
+	width: 130px;
+	background-color: lightgrey;
+	
+	box-sizing: border-box;
+	padding-left: 10px;
+	padding-right:10px 
+}
+#defaultMailingList i{
+	margin-bottom: 10px;
+	font-size: 30px;
+	cursor: pointer
+}
+
+.mailingListItemsContainer{
+	width: 130px;
+	background-color: lightgrey;
+}

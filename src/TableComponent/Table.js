@@ -16,7 +16,9 @@ class Table extends Component{
 			checkBoxes:[],
 			templateData:null,
 			template: false,
-			templateId:''
+			templateId:'',
+			createMailListMessage:"",
+			upload: false
 			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
@@ -30,6 +32,7 @@ class Table extends Component{
 		this.createTemplates = this.createTemplates.bind(this);
 		this.changeTemplateState = this.changeTemplateState.bind(this);
 		this.radioChange = this.radioChange.bind(this);
+		this.changeUpload =this.changeUpload.bind(this)
 	}
 	componentDidMount(){
 		let self = this;
@@ -43,8 +46,12 @@ class Table extends Component{
 	createEmailList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
 		let mailingLists = this.state.sendData;
-		let nameMailingList = this.refs.mailingListName;
-		console.log(mailingLists)
+		let mailingList ={
+			EmailListName : this.refs.mailingListName.value,
+			contacts: mailingLists
+		} 
+		call('api/emaillists','POST', mailingList).then(()=>this.setState({createMailListMessage: 'Your Mailing List has been added'}))
+
 	}
 	createEmailListRender(){
 		if(this.state.namingEmailList){
@@ -52,11 +59,31 @@ class Table extends Component{
 				<div className="mailing_list_form">
 					<input  ref="mailingListName" type="text"/>
 					<button onClick={this.createEmailList}> Create </button>
-					<button onClick={this.changeNamilngList} > Cancel </button>
+					<button onClick={this.changeUpload} > Cancel </button>
 				</div>
+
 			)
 		}else{
 			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} disabled={this.state.disabled}> Create New Mailing List </button>
+		}
+	}
+	changeUpload(){
+		this.setState({upload: !this.state.upload})
+	}
+	uploadFile(url, data){
+		
+	}
+	uploadRender(){
+		if(this.state.upload){
+			return (
+				<div className="upload_form">
+					<input  ref="upload_input" type="file"/>
+					<button onClick={this.uploadFile}> Upload </button>
+					<button onClick={this.changeUpload} > Cancel </button>
+				</div>
+			)
+		}else{
+			return <button  className="btn_table upload" onClick={this.changeUpload} > Upload File </button>
 		}
 	}
 	getSendData(sendData, checkBoxes){
@@ -167,6 +194,7 @@ class Table extends Component{
 				{this.createTemplates()}
 				<button  className="btn_table delete_button" onClick={this.deleteContacts} disabled={this.state.disabled}> Delete</button>
 				{this.createEmailListRender()}
+				{this.uploadRender()}
 				<AddContact getNewContacts={this.getNewContacts}/>
 			</div>
 		)
