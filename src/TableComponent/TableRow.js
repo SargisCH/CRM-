@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import EditRow from './EditRow.js';
 
 class TableRow extends Component{
 	constructor(props){
@@ -108,17 +107,12 @@ class TableRow extends Component{
 		     	<tr key={index} ref={index}>
 					 <td><input className="check"  onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
 			     	<td  key={`${data['Full Name']}Full Name`}>
-				     	<EditRow update={this.props.update} data={data.Firstname} propName="Firstname" editingData={this.state.editRowData} 
-				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 				     	{data['Full Name']}
 			     	</td>
 			     	<td key={`${data['Company Name']}Company Name`}>
-				     	<EditRow update={this.props.update} data={data.Lastname} propName="Lastname" editingData={this.state.editRowData} 
-				     	show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 				     	{data["Company Name"]}
 				     </td>
 			     	<td key={`${data.Position}position`} >
-			     	    <EditRow update={this.props.update} data={data.Mail} propName="Mail" editingData={this.state.editRowData} show={this.state.editingShow} indexEdit={this.state.editRowIndex}/>
 			     	    {data.Position}
 			     	</td>
 			     	<td key={`${data.Country}country`}  id ="ids">

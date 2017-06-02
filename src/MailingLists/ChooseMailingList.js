@@ -23,6 +23,7 @@ class ChooseMailingList extends Component {
     rendertable(){
         let table;
         if(this.state.tableContent !== null){
+            console.log(this.state.tableContent)
             let tableContent = this.state.tableContent;
             table = tableContent.Contacts.map((item,index)=>{
 		     	<tr key={index} ref={index}>
@@ -48,7 +49,7 @@ class ChooseMailingList extends Component {
 		     	</tr>
             })
         }
-
+        return table
     }
     mapMailingLists(){
         const options = this.props.emailLists.map((item,index)=>{
@@ -67,7 +68,9 @@ class ChooseMailingList extends Component {
                 : " "
             }
                 <div className="mailingListTable">
-                    {this.rendertable()}
+                    <table>
+                        {this.rendertable()}
+                    </table>
                 </div>
             </div>
         )
