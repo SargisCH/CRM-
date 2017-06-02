@@ -32,7 +32,7 @@ class TableRow extends Component{
 					}
 				}
 			}
-			this.props.getSendData(sendArray, this.state.checkBoxes);
+			this.props.getSendData(sendArray);
 			this.props.isDisable(sendArray);
 		 }
 		 save(){

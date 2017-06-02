@@ -158,6 +158,10 @@
 .choose_mailing_list p{
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
+}
+.choose_mailing_list p:hover{
+	background: white
 }
 .mailLingListSelection{
 	position: relative;
@@ -185,4 +189,17 @@
 .mailingListItemsContainer{
 	width: 130px;
 	background-color: lightgrey;
+}
+.mailing_list_table table{
+	border: 2px solid #504b4b;
+	border-collapse: collapse;
+	width: 95%;
+}
+.checkBoxMailingList{
+	margin-left: 0;
+}
+.mailing_list_table td{
+	border: 2px solid #504b4b;
+	border-collapse: collapse;
+	text-align: center
 }

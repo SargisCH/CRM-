@@ -86,9 +86,8 @@ class Table extends Component{
 			return <button  className="btn_table upload" onClick={this.changeUpload} > Upload File </button>
 		}
 	}
-	getSendData(sendData, checkBoxes){
+	getSendData(sendData){
 		this.setState({sendData :sendData});
-		this.setState({checkBoxes: checkBoxes})
 	}
 	isDisable(sendData){
 		if(sendData.length>0){
@@ -129,9 +128,9 @@ class Table extends Component{
 		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
 		}
-		this.setState({checkBoxes: checkBoxes})
-		this.setState({disabled:true})
-		this.changeTemplateState;
+/*		this.setState({checkBoxes: checkBoxes})
+		this.setState({disabled:true})*/
+		this.changeTemplateState();
 	}	
 	getNewContacts(newContactobj){
 		let self = this;
@@ -169,7 +168,7 @@ class Table extends Component{
 						<form type="radio" name="selection" className="templateForm">
 							{templateName}
 						</form>
-						<button onClick={this.postData} onClick={this.changeTemplateState}> Send </button>
+						<button onClick={this.postData} > Send </button>
 						<button onClick={this.changeTemplateState}> Cancel </button>
 					</div>
 				</div>

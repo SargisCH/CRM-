@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import '../StyleSheet/MailingLists.css';
-//import { EditAddList } from './EditAddList';
-import call from '../helpers/call.js'
 
 class ChooseMailingList extends Component {
     constructor(props) {
@@ -9,83 +7,52 @@ class ChooseMailingList extends Component {
         this.state={
             emailListId: 0,
             showMailingListSelection: false,
-            tableContent: null
+            tableContent: []
         }
-
-        this.changeSelection = this.changeSelection.bind(this)
+        this.changeSelection = this.changeSelection.bind(this);
+        this.selectEmailList = this.selectEmailList.bind(this);
     }
     changeSelection(){
         this.setState({showMailingListSelection: !this.state.showMailingListSelection})
     }
-    componentDidMount(){
-        call('api/emaillists?id=' + this.props.emailLists[0].EmailListID,'GET').then(res=>this.setState({tableContent: res}))
-    }
-    rendertable(){
-        let table;
-        if(this.state.tableContent !== null){
-            console.log(this.state.tableContent)
-            let tableContent = this.state.tableContent;
-            table = tableContent.Contacts.map((item,index)=>{
-		     	<tr key={index} ref={index}>
-					 <td><input className="check"    type="checkbox" id={index} />
-						  </td>
-			     	<td  key={`${tableContent['Full Name']}Full Name`}>
-				     	{tableContent['Full Name']}
-			     	</td>
-			     	<td key={`${tableContent['Company Name']}Company Name`}>
-				     	{tableContent["Company Name"]}
-				     </td>
-			     	<td key={`${tableContent.Position}position`} >
-			     	    {tableContent.Position}
-			     	</td>
-			     	<td key={`${tableContent.Country}country`}  id ="ids">
-			     	    {tableContent.Country}
-			     	</td>
-					 <td key={`${tableContent.Email}email`} id ="ids">
-					 
-			     	    {tableContent.Email}
-			     	</td>
+/*    componentDidMount(){
+        call('api/emaillists?id=1','GET').then(res=>{this.setState({tableContent: res}); console.log(res)})
+    }*/
 
-		     	</tr>
-            })
-        }
-        return table
-    }
-    mapMailingLists(){
-        const options = this.props.emailLists.map((item,index)=>{
-            return <p key={index}  className="options" onClick={this.mailingListName} id={index} value={this.props.emailLists[index].EmailListName}>{this.props.emailLists[index].EmailListName}</p>
-        })
+/*    mapMailingLists(){
+
         return (
-            <div className="mailLingListSelection">
-                <p id="defaultMailingList">
-                    <span>{this.props.emailLists[0].EmailListName}</span>
-                    <i className="fa fa-caret-down "  onClick={this.changeSelection}aria-hidden="true"></i>
-                </p>
-                {this.state.showMailingListSelection ? 
-                <div  className="mailingListItemsContainer" name="" id="">
-                    {options}
-                </div>
-                : " "
-            }
-                <div className="mailingListTable">
-                    <table>
-                        {this.rendertable()}
-                    </table>
-                </div>
-            </div>
+
         )
+    }*/
+    selectEmailList(event){
+        let index = event.target.id;
+        let emailListId = this.props.emailLists[index].EmailListID;
+        console.log(emailListId);
+        this.props.getEmailListById(emailListId);
+        this.setState({showMailingListSelection: !this.state.showMailingListSelection})
     }
     render() {
-     
+        console.log(this.props.emailLists)
+        const options = this.props.emailLists.map((item,index)=>{
+            return <p key={index}  className="options" onClick={this.selectEmailList} id={index} value={this.props.emailLists[index].EmailListName}>{this.props.emailLists[index].EmailListName}</p>
+        })
         return (
-            <div className="mailing_list_container">
-                <div className="choose_mailing_list">
+            <div className="choose_mailing_list">
+                <div className="mailLingListSelection">
+                    <p id="defaultMailingList">
+                        <span>{this.props.emailLists[0].EmailListName}</span>
+                        <i className="fa fa-caret-down "  onClick={this.changeSelection}aria-hidden="true"></i>
+                    </p>
+                    {this.state.showMailingListSelection ? 
+                        <div  className="mailingListItemsContainer" name="" id="">
+                            {options}
+                        </div>
+                    : " "
+            }
                 </div>
-                    {this.mapMailingLists()}
             </div>
-        )
-
-        
+        )   
     }
 }
 export default ChooseMailingList;

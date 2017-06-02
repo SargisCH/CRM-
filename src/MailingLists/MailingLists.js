@@ -3,40 +3,34 @@ import '../StyleSheet/MailingLists.css';
 //import { EditAddList } from './EditAddList';
 import call from '../helpers/call.js';
 import ChooseMailingList from './ChooseMailingList';
+import MailingListTable from './MailingListTable'
 
 
 class MailingLists extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            emailLists: null,
-            tableContent: null
+            emailLists: [],
+            tableContent:null
          };
-
+         this.getEmailListById = this.getEmailListById.bind(this);
     }
     componentDidMount(){
-        call('api/emaillists','GET').then(response => {  response.error ? alert(response.message) : this.setState({emailLists: response})});
+        call('api/emaillists','GET').then(response => {  response.error ? alert(response.message) : this.setState({emailLists: response})});   
+         call('api/emaillists?id=1','GET').then(response=> this.setState({tableContent: response}))
     }
-/*    passTableContent(){
-        let table;
-        if(this.state.emailLists !== null){
-            call('api/emaillists?id=' + this.state.emailLists[0].EmailListID,'GET').then(res => this.setState({tableContent: res}))
-            if(this.state.tableContent !== null){
-                table =  <MailingListTable  tableContent={ this.state.tableContent}/>
-            } else{
-                table =  <p>please Wait</p>
-            }
-            return table            
-        }
-
-    }*/
+    getEmailListById(id){
+        call('api/emaillists?id=' + id,'GET').then(response=> this.setState({tableContent: response}))
+    }
     render() {
+/*        if(this.state.emailLists.length>0){
+            console.log(this.state.emailLists)
+        }*/
+        
         return (
             <div className="mailing_list_container">
-                <div className="choose_mailing_list">
-                   {this.state.emailLists !== null ? <ChooseMailingList  getTable={this.getTable} emailLists={this.state.emailLists}/> : <p>please Wait</p> }
-                </div>
-
+                  {this.state.emailLists.length > 0 ? <ChooseMailingList  getEmailListById={this.getEmailListById} emailLists={this.state.emailLists}/>: <p>wait</p> }
+                   {this.state.tableContent  !== null ? <MailingListTable  tableContent={this.state.tableContent.Contacts}/>: <p>waitttttt</p> }
             </div>
         )
 
