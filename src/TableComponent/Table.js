@@ -89,8 +89,8 @@ class Table extends Component{
 				<div className="upload_form_container">
 					<div className="upload_form">
 						<input  ref="upload_input" type="file"/>
-						<button classname="btn_table" onClick={this.uploadFile}> Upload </button>
-						<button classname="btn_table" onClick={this.changeUpload} > Cancel </button>
+						<button className="btn_table" onClick={this.uploadFile}> Upload </button>
+						<button className="btn_table" onClick={this.changeUpload} > Cancel </button>
 					</div>
 				</div>
 			)

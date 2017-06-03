@@ -4,7 +4,6 @@ import MailingListHeader from './MailingListHeader.js';
 //import { EditAddList } from './EditAddList';
 import call from '../helpers/call.js';
 import Contacts from './Contacts'
-
 class MailingLists extends Component {
     constructor(props){
         super(props);
@@ -24,9 +23,9 @@ class MailingLists extends Component {
         this.controlContactsView = this.controlContactsView.bind(this)
         this.radioChange = this.radioChange.bind(this);
         this.sendEmail = this.sendEmail.bind(this);
-/*        this.deleteEmailList= this.deleteEmailList.bind(this);
-        this.getMailingListIdDelate = this.getMailingListIdDelate.bind(this);*/
-        
+        this.deleteEmailList = this.deleteEmailList.bind(this);
+        this.changeContactsState = this.changeContactsState.bind(this);
+        //this.getMailingListIdforDelete = this.getMailingListIdforDelete.bind(this);
     }
     componentDidMount(){
         call('api/emaillists','GET')
@@ -38,13 +37,13 @@ class MailingLists extends Component {
     getMailingListId(event){
         this.setState({emailListId:event.target.id});
         this.changeTemplateState()
-        console.log("emailListId = "+event.target.id)
-    }
-/*    getMailingListIdDelate(event){
-        this.setState({emailListId:event.target.id});
-        this.deleteEmailList()
         //console.log("emailListId = "+event.target.id)
-    }*/
+    }
+    // getMailingListIdforDelete(event){
+    //     this.setState({emailListId:event.target.id});
+        
+    // }
+    
     changeTemplateState(){
 		this.setState({template: !this.state.template});
 	}
@@ -69,14 +68,14 @@ class MailingLists extends Component {
 				templateNames[j] = templateNames[j].split(/(?=[A-Z])/).join(" ");
 
 			}
-				console.log(templateNames)
+				//console.log(templateNames)
 			let templateName = templateNames.map((templateNames,index)=>
 				<label key={index}>
 					<input type="radio" name="selection" onChange={this.radioChange} id={templateIds[index]} value={templateNames}/>
 					{templateNames}<br/>
 				</label>	
 					)
-				console.log(this.state.templateId);
+				//console.log(this.state.templateId);
 			return (
 				<div className="templateBlock">
 					<div className="template">
@@ -90,27 +89,36 @@ class MailingLists extends Component {
 				</div>
 			)
 		}
-	}
+	} 
     sendEmail(){
         //console.log(this.state.templateId);
         // console.log(this.state.emailListId);
         call('api/sendemails?template='+ this.state.templateId+'&emaillistId='+this.state.emailListId,'POST');
         this.changeTemplateState();
     }
-/*    deleteEmailList(){
-        console.log(this.state.emailListId);
-        if(this.state.emailListId!==''){
-            call('api/emaillists?id='+ this.state.emailListId, 'DELETE')
-        }  
-    }*/
+    deleteEmailList(event){
+       let emailLists = this.state.emailLists;
+       for(let i in emailLists){
+           if(event.target.id == emailLists[i].EmailListID){
+                emailLists.splice(i,1);
+           }
+           this.setState({emailLists:emailLists});
+       }
+       call('api/emaillists?id='+ event.target.id, 'DELETE');
+    }
     getContacts(event){
         let index = event.target.id;
          call('api/emailLists?id='+ index ,'GET')
 		.then(response => {  response.error ? alert(response.message) : this.setState({contacts: response.Contacts})}); 
         this.setState({contactsView: true}) 
+        this.setState({emailListId:index});     
     }
     controlContactsView(contactsView){
         this.setState({contactsView: contactsView})
+    }
+    changeContactsState(contacts){
+        this.setState({contacts:contacts})
+        console.log(this.state.contacts)
     }
     render(){
         const data = this.state.emailLists;
@@ -122,20 +130,20 @@ class MailingLists extends Component {
                 </td>
                 <td><button id={data["EmailListID"]}   onClick={this.getMailingListId}>Send Email</button></td>
                
-               {/* <td><button onClick={this.getMailingListIdDelate} id={data["EmailListID"]}>Delete</button></td>*/}
+               <td><button onClick={this.deleteEmailList} id={data["EmailListID"]}>Delete</button></td>
             </tr>
         );
         return(
             <div className="table_container">
                 <table className="mailing_list_table">
-                    <MailingListHeader className="mailing_list_header"></MailingListHeader>
+                    <MailingListHeader  className="mailing_list_header"></MailingListHeader>
                     <tbody className="tableBody">
                         {row}
                     </tbody>
                 </table>
                 {this.createTemplates()}
                     {this.state.contacts !== null &&  this.state.contactsView ?
-                        <Contacts controlContactsView={this.controlContactsView} contacts={this.state.contacts}/>: ""
+                        <Contacts changeContactsState={this.changeContactsState} emailListId={this.state.emailListId} controlContactsView={this.controlContactsView} contacts={this.state.contacts}/>: ""
                     }
                 </div>
         )

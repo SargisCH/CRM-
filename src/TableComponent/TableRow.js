@@ -123,7 +123,7 @@ class TableRow extends Component{
 					 
 			     	    {data.Email}
 			     	</td>
-					<td key="edit" id ="ids">
+					<td key="edit" id="edit_td" >
 						 {this.editRender(index)}
 						   
 			     	</td>
