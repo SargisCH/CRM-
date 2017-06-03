@@ -13,10 +13,10 @@ class TableRow extends Component{
 				id:[],
 				checkBoxes:[]
 		}
-		this.checkBoxChange = this.checkBoxChange.bind(this)
-		this.changeEditMode =this.changeEditMode.bind(this)
-		this.editOnClicks =this.editOnClicks.bind(this)
-		this.save = this.save.bind(this)
+		this.checkBoxChange = this.checkBoxChange.bind(this);
+		this.changeEditMode =this.changeEditMode.bind(this);
+		this.editOnClicks =this.editOnClicks.bind(this);
+		this.save = this.save.bind(this);
 }
 		 checkBoxChange(event){
 			let index = event.target.id;
@@ -34,6 +34,7 @@ class TableRow extends Component{
 			}
 			this.props.getSendData(sendArray);
 			this.props.isDisable(sendArray);
+			this.props.deleteCheckBoxes(this.state.checkBoxes)
 		 }
 		 save(){
 			let savedData= {

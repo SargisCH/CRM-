@@ -11,6 +11,7 @@ export default  function call(uri, method, body = false, error_message = "Someth
     if (!response.ok) {
       return {error: true, message: error_message};
     }
+    console.log("response")
     return response;
   })
   .then(response => response.json())

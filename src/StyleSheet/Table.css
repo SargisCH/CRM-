@@ -1,10 +1,12 @@
 .UserTable {
     width: 100%;
-    height: 100%;
+   /*height: 100%;*/
     /*background-color: #f1f1f1;*/
     color: #513654;
     box-sizing: border-box;
 	padding:25px;
+	height: 600px;
+	overflow: auto
 	
 }
 button:disabled{ 
@@ -13,11 +15,11 @@ button:disabled{
   pointer-events: none;
 }
 
-#scroll{
+/*#scroll{
 	width: 100%;
     height: 80%;
 	overflow:scroll;
-}
+}*/
 .table {
     width: 100%;
     margin: 0px auto;
@@ -74,15 +76,18 @@ button:disabled{
 	margin-top: 5px;
 	margin-left: 20px;
 }
-.send_button{
+/*.send_button{
 	margin-top: 30px;
-}
+}*/
 .check{
 	margin-left:39%;
 	margin-top: 2px;
 }
 .add_contact_container{
 	margin-top: 50px;
+	width: 100px;
+	display: inline;
+ 
 }
 .add_new_contact_form span{
 	display: inline-block;
@@ -102,16 +107,14 @@ button:disabled{
 }
 .delete_button{
 	background: #e91e63;
-	margin-left: 15px;
+	/*margin-left: 15px;*/
 }
-.create_email_list{
-	margin-left: 20px;
-}
+
 .edit{
 	cursor: pointer
 }
 .edit_block{
-	position: absolute;
+	position: fixed;
 	left: 0; 
 	top: 0;
 	bottom: 0;
@@ -130,12 +133,12 @@ button:disabled{
 	padding-left: 20px;
 }
 .templateBlock{
-	position: absolute;
+	position: fixed;
 	left: 0; 
 	top: 0;
 	bottom: 0;
 	width: 100%;
-	background-color: rgba(224,224,224,0.07);
+	background-color: rgba(224,224,224,0.3);
 }
 .template{
 	background: white;
@@ -160,4 +163,144 @@ button:disabled{
 		text-align: center;
 		font-size: 1.5em;
 		}
+}
+.subscribingContainer{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(176,176,176,0.5);
+}
+.subscribingMailigList{
+	background: white;
+	width: 45%;
+	height: 300px;
+	margin: 200px auto;
+	text-align: center;
+}
+.subscribingMailigList p{
+	width: 150px;
+	float: left;
+	margin: 0;
+	padding:0;
+
+}
+.subscribingMailigList p:hover{
+	background: grey;
+	cursor:pointer
+}
+.mailingListButtons{
+	text-align: left;
+}
+
+
+.subscribingMailigList button{
+	margin-top: 20px;
+	margin-left: 20px
+}
+.clear{
+	clear: both;
+}
+
+
+@media (max-width:1076px) {
+	.subscribingMailigList{
+		background: white;
+		width: 90%;
+		height: 80%;
+		margin-top: 100px;
+	}
+}
+.mailing_list_form_container{
+	position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(176,176,176,0.5);
+}
+.mailing_list_form{
+		background: white;
+	width: 45%;
+	height: 300px;
+	margin: 200px auto;
+	box-sizing: border-box;
+	padding-top: 30px;
+	padding-left: 20px;
+}
+.mailing_list_form button{
+	margin-left: 20px;
+}
+.upload_form_container{
+	position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(176,176,176,0.5);
+}
+.upload_form{
+		background: white;
+	width: 45%;
+	height: 300px;
+	margin: 200px auto;
+	box-sizing: border-box;
+	padding-top: 30px;
+	padding-left: 20px;
+}
+.upload_form button{
+	margin-left: 20px;
+}
+.add_new_contact_form_container{
+		position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(176,176,176,0.5);
+}
+.add_new_contact_form{
+	background: white;
+	width: 45%;
+	height: 300px;
+	margin: 200px auto;
+	box-sizing: border-box;
+	padding-top: 30px;
+	padding-left: 20px;
+}
+@media (max-width:800px) {
+	.add_new_contact_form{
+		margin-top: 0;
+		height: 100%;
+	}
+}
+@media (max-width:512px) {
+	.add_new_contact_form{
+		width: 100%;
+		height: 100%;
+		margin-top: 0;
+	}
+}
+.message{
+	color: forestgreen
+}
+.buttons{
+	width: 30%;
+	float: left;
+	margin-top: 10px;
+	margin-left: 20px;
+}
+@media (max-width:618px) {
+	.buttons{
+		width: 45%;
+	}
+}
+@media (max-width:482px) {
+	.mailing_list_form{
+		width: 100%;
+	}
+	.upload_form{
+		width: 100%
+	}
 }

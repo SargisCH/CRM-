@@ -1,19 +1,39 @@
-import React, { Component } from 'react';
-import '../StyleSheet/MailingLists.css';
+// import React, { Component } from 'react';
+// import '../StyleSheet/MailingLists.css';
 
-class MailingListTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
+// class MailingListTable extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+// 			sendArray:[],
+	// 		//checkBoxes:[]
+	// 	};
+	// 	this.checkBoxChange = this.checkBoxChange.bind(this);
+    // }
+	// checkBoxChange(event){
+	// 		let index = event.target.id;
+	// 		let sendArray = this.state.sendArray;
+	// 		if(event.target.checked === true){
+	// 			sendArray.push(this.props.tableContent[index].GuID);
+	// 			this.setState({sendArray: sendArray});
+	// 		}else{
+	// 			for(let i in sendArray){
+	// 				if(this.props.tableContent[index].GuID === sendArray[i]){
+	// 					sendArray.splice(i, 1);
+						//console.log(this.props.tableContent[index].GuID)
+	// 				}
+	// 			}
+	// 		}
+	// 		this.props.getSendData(sendArray);
 
-    }
-    render() {
+	// 	 }
+    // render() {
 /*        if(this.state.emailLists.length>0){
             console.log(this.state.emailLists)
         }*/
-         const data=this.props.tableContent
-		 console.log(this.props.tableContent)
-		      const row = data.map((data,index)=>
+        //  const data=this.props.tableContent
+		 //console.log(this.props.tableContent)
+		      /*const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
 					 <td><input className="checkBoxMailingList"  onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
 			     	<td  key={`${data['Full Name']}Full Name`}>
@@ -42,8 +62,9 @@ class MailingListTable extends Component {
                  </table>
             </div>
         )
-
-        
     }
 }
-export default MailingListTable;
+export default MailingListTable;*/
+						
+
+        
