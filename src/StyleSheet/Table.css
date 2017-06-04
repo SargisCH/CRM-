@@ -1,5 +1,5 @@
 .UserTable {
-    width: 100%;
+	width: 100%;
    height: 100%;
     /*background-color: #f1f1f1;*/
     color: #513654;
@@ -9,8 +9,11 @@
 	overflow: auto
 	
 }
+#delete_button{
+	background:#e91e63;
+}
 button:disabled{ 
-  background-color: #cccccc;
+  background-color: #cccccc !important;
   color: #666666;
   pointer-events: none;
 }
@@ -64,8 +67,8 @@ button:disabled{
     margin-top: 10px;
 }
 
-.btn_table{
-	padding: 10px;
+button{
+	padding: 1%;
     color: #fff;
     background-color: #009688;
     border-radius: .1rem;
@@ -74,7 +77,7 @@ button:disabled{
 	cursor:pointer;
 	box-shadow: 0 0px 0px 0 rgba(56,38,0,1);
 }
-.btn_table:hover{
+button:hover{
 	 background-color: #735a73; 
 }
 .check{
@@ -102,7 +105,7 @@ button:disabled{
 .add_new_contact_form label{
 	line-height: 2; 
 }
-#add_button{
+/*#add_button{
 	background: #009688;
 	display: inline-block;
 	width: 75px;
@@ -112,9 +115,9 @@ button:disabled{
 	background: #735a73;
 }
 .delete_button{
-	background: #e91e63;
+	background: #e91e63;*/
 	/*margin-left: 15px;*/
-}
+/*}*/
 
 .edit{
 	cursor: pointer
@@ -138,7 +141,7 @@ button:disabled{
 	box-sizing: border-box;
 	padding-left: 20px;
 }
-.templateBlock{
+.templateBlock, .delete_block{
 	position: fixed;
 	left: 0; 
 	top: 0;
@@ -146,7 +149,7 @@ button:disabled{
 	width: 100%;
 	background-color: rgba(224,224,224,0.3);
 }
-.template{
+.template, .delete_popoUp{
 	background: white;
 	width: 400px;
 	margin: 0 auto;

@@ -14,7 +14,9 @@ class MailingLists extends Component {
             templateId:'',
             templateData:null,
             contacts: null,
-            contactsView: false
+            contactsView: false,
+            delete: false,
+            deleteId: ''
         }
         this.getMailingListId = this.getMailingListId.bind(this);
         this.createTemplates = this.createTemplates.bind(this);
@@ -25,7 +27,8 @@ class MailingLists extends Component {
         this.sendEmail = this.sendEmail.bind(this);
         this.deleteEmailList = this.deleteEmailList.bind(this);
         this.changeContactsState = this.changeContactsState.bind(this);
-        //this.getMailingListIdforDelete = this.getMailingListIdforDelete.bind(this);
+        this.createDeletePopUp = this.createDeletePopUp.bind(this);
+		this.changeDeleteState = this.changeDeleteState.bind(this);
     }
     componentDidMount(){
         call('api/emaillists','GET')
@@ -39,10 +42,7 @@ class MailingLists extends Component {
         this.changeTemplateState()
         //console.log("emailListId = "+event.target.id)
     }
-    // getMailingListIdforDelete(event){
-    //     this.setState({emailListId:event.target.id});
-        
-    // }
+    
     
     changeTemplateState(){
 		this.setState({template: !this.state.template});
@@ -99,12 +99,13 @@ class MailingLists extends Component {
     deleteEmailList(event){
        let emailLists = this.state.emailLists;
        for(let i in emailLists){
-           if(event.target.id == emailLists[i].EmailListID){
+           if(this.state.deleteId == emailLists[i].EmailListID){
                 emailLists.splice(i,1);
            }
            this.setState({emailLists:emailLists});
        }
-       call('api/emaillists?id='+ event.target.id, 'DELETE');
+       call('api/emaillists?id='+ this.state.deleteId, 'DELETE');
+       this.changeDeleteState(event);
     }
     getContacts(event){
         let index = event.target.id;
@@ -118,8 +119,26 @@ class MailingLists extends Component {
     }
     changeContactsState(contacts){
         this.setState({contacts:contacts})
-        console.log(this.state.contacts)
+        //console.log(this.state.contacts)
     }
+    createDeletePopUp(){
+		if(this.state.delete){
+			return(
+				<div className="delete_block">
+					<div className="delete_popoUp">
+						<p>Are you sure?</p>
+						<button onClick={this.deleteEmailList}>Delete</button>
+						<button onClick={this.changeDeleteState}>Cancel</button>
+					</div>
+				</div>
+			)
+		}
+	}
+	changeDeleteState(event){
+		this.setState({delete:!this.state.delete});
+        this.setState({deleteId:event.target.id})
+
+	}
     render(){
         const data = this.state.emailLists;
         //console.log(data);
@@ -130,8 +149,9 @@ class MailingLists extends Component {
                 </td>
                 <td><button id={data["EmailListID"]}   onClick={this.getMailingListId}>Send Email</button></td>
                
-               <td><button onClick={this.deleteEmailList} id={data["EmailListID"]}>Delete</button></td>
+               <td><button onClick={this.changeDeleteState} id={data["EmailListID"]}>Delete</button></td>
             </tr>
+               
         );
         return(
             <div className="table_container">
@@ -141,6 +161,7 @@ class MailingLists extends Component {
                         {row}
                     </tbody>
                 </table>
+                {this.createDeletePopUp()}
                 {this.createTemplates()}
                     {this.state.contacts !== null &&  this.state.contactsView ?
                         <Contacts changeContactsState={this.changeContactsState} emailListId={this.state.emailListId} controlContactsView={this.controlContactsView} contacts={this.state.contacts}/>: ""

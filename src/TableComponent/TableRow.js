@@ -18,7 +18,7 @@ class TableRow extends Component{
 		this.editOnClicks =this.editOnClicks.bind(this);
 		this.save = this.save.bind(this);
 }
-		 checkBoxChange(event){
+		 checkBoxChange(event){ 
 			let index = event.target.id;
 			let sendArray = this.state.sendArray;
 			this.state.checkBoxes.push(event.target);

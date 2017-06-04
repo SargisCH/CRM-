@@ -16,11 +16,14 @@ class Table extends Component{
 			checkBoxes:[],
 			templateData:null,
 			template: false,
-			templateId:'',
+			templateId:"",
 			createMailListMessage:"",
 			upload: false,
 			mailingLists: [],
-			mailingListShow: false
+			mailingListShow: false,
+			delete: false,
+			mailingListDisabled: true,
+			mailingListId:""
 			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
@@ -37,7 +40,11 @@ class Table extends Component{
 		this.changeUpload =this.changeUpload.bind(this);
 		this.changeMailingListShow = this.changeMailingListShow.bind(this);
 		this.addToMailingList = this.addToMailingList.bind(this);
-		this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this)
+		this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this);
+		this.createDeletePopUp = this.createDeletePopUp.bind(this);
+		this.changeDeleteState = this.changeDeleteState.bind(this);
+		this.isDisableAddMailingList = this.isDisableAddMailingList.bind(this);
+		this.changeMailingListDisable = this.changeMailingListDisable.bind(this);
 
 	}
 	componentDidMount(){
@@ -107,7 +114,10 @@ class Table extends Component{
 		} else {
 			this.setState({disabled:true})
 		}
-	}	
+	}
+	isDisableAddMailingList(){
+
+	}
 	deleteCheckBoxes(checkBoxes){
 		this.setState({checkBoxes:checkBoxes})
 	}
@@ -129,6 +139,23 @@ class Table extends Component{
 		}
 		this.setState({checkBoxes: checkBoxes});
 		this.setState({disabled:true});
+		this.changeDeleteState();
+	}
+	createDeletePopUp(){
+		if(this.state.delete){
+			return(
+				<div className="delete_block">
+					<div className="delete_popoUp">
+						<p>Are you sure?</p>
+						<button onClick={this.deleteContacts}>Delete</button>
+						<button onClick={this.changeDeleteState}>Cancel</button>
+					</div>
+				</div>
+			)
+		}
+	}
+	changeDeleteState(){
+		this.setState({delete:!this.state.delete});
 	}
 	savedData(obj, id){
 		let savedData = this.state.data;
@@ -199,18 +226,24 @@ class Table extends Component{
 	changeMailingListShow(){
 		this.setState({mailingListShow: !this.state.mailingListShow})
 	}
-	addToMailingList(event){
-		let id = event.target.id;
+	addToMailingList(){
+		let id = this.state.mailingListId;
 		call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(response=>console.log(response));	
 		this.changeMailingListShow();
 	}
+	changeMailingListDisable(event){
+		this.setState({mailingListDisabled:false});
+		this.setState({mailingListId:event.target.id})
+
+	}
+
 	addToMailingListRender(){
 		if(this.state.mailingListShow){
 			if(this.state.mailingLists.length > 0){
 				let mailingLists = this.state.mailingLists;
 				console.log(mailingLists)
 				let choose = mailingLists.map((item,index)=>{
-					return <p  onClick={this.addToMailingList} key={index} id={item.EmailListID}>{item.EmailListName}</p>
+					return <p onClick={this.changeMailingListDisable} key={index} id={item.EmailListID}>{item.EmailListName}</p>
 				})
 				return (
 					<div className="subscribingContainer">
@@ -218,6 +251,7 @@ class Table extends Component{
 							{choose}
 							<div className="clear"></div>
 							<div className="mailingListButtons">
+								<button onClick={this.addToMailingList} disabled={this.state.mailingListDisabled}> Add</button>
 								<button onClick={this.changeMailingListShow} className="btn_table"> Cancel</button>
 							</div>
 						</div>
@@ -246,8 +280,9 @@ class Table extends Component{
 					</div>
 						{this.createTemplates()}
 					<div className="buttons">
-						<button  className="btn_table delete_button" onClick={this.deleteContacts} 
+						<button  id="delete_button" onClick={this.changeDeleteState} 
 						disabled={this.state.disabled}> Delete</button>
+						{this.createDeletePopUp()}
 					</div>
 					<div className="buttons">
 						{this.createEmailListRender()}

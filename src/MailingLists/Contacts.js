@@ -6,12 +6,16 @@ class Contacts extends Component{
         this.state={
             sendData:[],
             checkBoxes:[],
-            contacts:this.props.contacts
+            delete: false,
+            disabled: true
+           
         }
         this.controlContactsView = this.controlContactsView.bind(this);
         this.checkBoxChange = this.checkBoxChange.bind(this);
         this.deleteData = this.deleteData.bind(this);
-        // this.console = this.console.bind(this);
+        this.createDeletePopUp = this.createDeletePopUp.bind(this);
+		this.changeDeleteState = this.changeDeleteState.bind(this);
+        this.isDisable = this.isDisable.bind(this);
     }
     checkBoxChange(event){
 			let index = event.target.id;
@@ -27,31 +31,57 @@ class Contacts extends Component{
 					}
 				}
 			}
-			
+            this.isDisable(sendData);
 	}
-    deleteData(){
-        let deleteData = this.state.sendData;
+    isDisable(sendData){
+        sendData = this.state.sendData;
+		if(sendData.length>0){
+			this.setState({disabled:false})
+		} else {
+			this.setState({disabled:true})
+		}
+	}	
+    deleteData(deleteData){
+        deleteData = this.state.sendData;
         let id = this.props.emailListId;
-        //let contacts = this.state.contacts
-        //console.log(contacts)
-        
-         call('api/emaillists/update?id='+id+'&flag=false','PUT', deleteData);
-        // for(let i in deleteData){
-		// 	 for(let j in contacts){
-		// 		 if(deleteData[i] == contacts[j].GuID){
-		// 			 contacts.splice(j,1)
-		// 		 }
-		// 	 }
-		//  }
-        //     this.props.changeContactsState(contacts);
+        let contacts = this.props.contacts;
+        call('api/emaillists/update?id='+id+'&flag=false','PUT', deleteData);
+        for(let i in deleteData){
+			 for(let j in contacts){
+				 if(deleteData[i] == contacts[j].GuID){
+					 contacts.splice(j,1)
+				 }
+			 }
+		 }
+            this.props.changeContactsState(contacts);
+            let checkBoxes = this.state.checkBoxes;
+            for(let i in checkBoxes){
+                checkBoxes[i].checked = false
+            }
+		    this.setState({checkBoxes: checkBoxes});
+            this.changeDeleteState();
+            this.setState({disabled:true})
        }
     
     controlContactsView(){
         this.props.controlContactsView(false);
     }
-    // console(){
-    //     console.log(this.props.contacts)
-    // }
+    createDeletePopUp(){
+            if(this.state.delete){
+                return(
+                    <div className="delete_block">
+                        <div className="delete_popoUp">
+                            <p>Are you sure?</p>
+                            <button onClick={this.deleteData}>Delete</button>
+                            <button onClick={this.changeDeleteState}>Cancel</button>
+                        </div>
+                    </div>
+                )
+            }
+        }
+	changeDeleteState(){
+		this.setState({delete:!this.state.delete});
+	}
 	render(){
         const data = this.props.contacts;
         //console.log(data);
@@ -94,7 +124,8 @@ class Contacts extends Component{
                                 {row}
                             </tbody>
                         </table>
-                            <button className="deleteContacts" onClick={this.deleteData}>Delete</button>
+                            <button className="deleteContacts" disabled={this.state.disabled} onClick={this.changeDeleteState}>Delete</button>
+                            {this.createDeletePopUp()}
                 </div>
             </div>
 		);
