@@ -92,3 +92,11 @@ th, td {
     display: inline-block;
     width:70%;
 }
+@media (max-width:900px) {
+	.mailingListName{
+	 width : 40%;
+	}
+}
+.mailingListItemsContainer{
+    overflow-y: 250px;
+}

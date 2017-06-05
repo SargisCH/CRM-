@@ -10,7 +10,7 @@ class Table extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			data: false,
+			data: [],
 			sendData: [],
 			disabled: true,
 			namingEmailList: false,
@@ -18,13 +18,14 @@ class Table extends Component{
 			templateData:null,
 			template: false,
 			templateId:"",
-			createMailListMessage:"",
+			successMessage: false,
 			upload: false,
 			mailingLists: [],
 			mailingListShow: false,
 			delete: false,
 			mailingListDisabled: true,
-			mailingListId:""
+			mailingListId:"",
+			mailingListName:""
 			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
@@ -44,8 +45,9 @@ class Table extends Component{
 		this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this);
 		this.createDeletePopUp = this.createDeletePopUp.bind(this);
 		this.changeDeleteState = this.changeDeleteState.bind(this);
-		this.isDisableAddMailingList = this.isDisableAddMailingList.bind(this);
 		this.changeMailingListDisable = this.changeMailingListDisable.bind(this);
+		this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
+		this.uploadFile = this.uploadFile.bind(this)
 
 	}
 	componentDidMount(){
@@ -59,8 +61,13 @@ class Table extends Component{
 		.then(response => {  response.error ? alert(response.message) :this.setState({mailingLists: response})});
 	}
 	changeMailingListDisable(event){
-		this.setState({mailingListDisabled:false});
-		this.setState({mailingListId:event.target.id});
+		this.setState({
+			mailingListDisabled:false,
+			mailingListId:event.target.id,
+			mailingListName: event.target.dataset.name
+			
+		});
+		this.setState({});
 	}
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
@@ -71,8 +78,12 @@ class Table extends Component{
 		let mailingList ={
 			EmailListName : this.refs.mailingListName.value,
 			contacts: mailingLists
-		} 
-		call('api/emaillists','POST', mailingList).then(()=>this.setState({createMailListMessage: 'Your Mailing List has been added'}))
+		}
+		let mailinglist  =this.state.mailingLists
+ 
+		call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Your Mailing List is created '});
+			mailinglist.push(res);
+		})
 
 	}
 	createEmailListRender(){
@@ -94,21 +105,30 @@ class Table extends Component{
 	changeUpload(){
 		this.setState({upload: !this.state.upload})
 	}
-uploadFile(event ){
+uploadFile(event){
 		event.preventDefault();
 		let data = new FormData();
     	let fileData = document.querySelector('input[type="file"]').files[0];
     	data.append("data", fileData);	
-		fetch("http://crmbetc.azurewebsites.net/api/contacts/upload", {
-     		 mode: 'no-cors',
-      		method: "POST",
-			  "Content-Type": "multipart/form-data",
-        	"Accept": "application/json",
-      		body: data
-    	}).then(function (res) {
-	  		return res.text()
-    	}).then(res=> res).then(res=>console.log(res));
-	}
+			fetch("http://crmbetc.azurewebsites.net/api/contacts/upload", {
+				method: "POST",
+				"Content-Type": "multipart/form-data",
+				"Accept": "application/json",
+				body: data
+			}).then(function (res) {
+				console.log(res)
+				return res.json()
+			}).then(res => {this.setState({successMessage: res})})
+			this.changeUpload();
+/*		fetch('http://crmbetc.azurewebsites.net/api/contacts/upload', {
+        	method:'POST',
+        	body:data   
+    	}).then(function(res) {
+        	return res.json()
+    	}).catch(function(e) {
+        	console.log('Error',e);
+    	}).then(res => console.log(res,this));*/
+}	
 	uploadRender(){
 		if(this.state.upload){
 			return (
@@ -134,9 +154,7 @@ uploadFile(event ){
 			this.setState({disabled:true})
 		}
 	}
-	isDisableAddMailingList(){
-
-	}
+	
 	deleteCheckBoxes(checkBoxes){
 		this.setState({checkBoxes:checkBoxes})
 	}
@@ -151,7 +169,7 @@ uploadFile(event ){
 			 }
 		 }
 		 this.setState({data:deleteData})
-		 call('api/contacts','DELETE', sendDeleteData);
+		 call('api/contacts','DELETE', sendDeleteData).then(()=>{this.setState({successMessage: "Contacts is deleted"}); console.log("delete")});
 		 		let checkBoxes = this.state.checkBoxes;
 		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
@@ -182,7 +200,7 @@ uploadFile(event ){
 	}
 	postData(sendData){
 		sendData = this.state.sendData;
-		call('api/sendemails?template='+this.state.templateId,'POST', sendData);
+		call('api/sendemails?template='+this.state.templateId,'POST', sendData).then(()=>this.setState({successMessage: "Your Email Sent"}));
 		let checkBoxes = this.state.checkBoxes;
 /*		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
@@ -193,7 +211,7 @@ uploadFile(event ){
 	}	
 	getNewContacts(newContactobj){
 		let newData = this.state.data;
-		call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); this.setState({data:newData})})
+		call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); this.setState({data:newData, successMessage:"New Contacts is added"})})
 	}
 	changeTemplateState(){
 		this.setState({template: !this.state.template})
@@ -226,7 +244,7 @@ uploadFile(event ){
 						<form type="radio" name="selection" className="templateForm">
 							{templateName}
 						</form>
-						<button onClick={this.postData} > Send </button>
+						<button onClick={this.postData} className="tempSendButton" > Send </button>
 						<button onClick={this.changeTemplateState}> Cancel </button>
 					</div>
 				</div>
@@ -244,7 +262,8 @@ uploadFile(event ){
 	}
 	addToMailingList(){
 		let id = this.state.mailingListId;
-		call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(response=>console.log(response));	
+		call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(this.setState({
+			successMessage: "Folowing contacts is added to " + this.state.mailingListName}));	
 		this.changeMailingListShow();
 	}
 /*	changeMailingListDisable(event){
@@ -258,12 +277,14 @@ uploadFile(event ){
 			if(this.state.mailingLists.length > 0){
 				let mailingLists = this.state.mailingLists;
 				let choose = mailingLists.map((item,index)=>{
-					return <p onClick={this.changeMailingListDisable} key={index} id={item.EmailListID}>{item.EmailListName}</p>
+					return <p onClick={this.changeMailingListDisable} data-name={item.EmailListName} key={index} id={item.EmailListID}>{item.EmailListName}</p>
 				})
 				return (
 					<div className="subscribingContainer">
 						<div className="subscribingMailigList">
-							{choose}
+							<div className="mailingLIsts">
+								{choose}
+							</div>
 							<div className="clear"></div>
 							<div className="mailingListButtons">
 								<button onClick={this.addToMailingList} disabled={this.state.mailingListDisabled}> Add</button>
@@ -279,20 +300,29 @@ uploadFile(event ){
 			return <button disabled={this.state.disabled} onClick={this.changeMailingListShow} className="btn_table addToEmailList" >Add to email List</button>
 		}
 	}
+	loading(){
+		if(this.state.data.length < 1){
+			return(  <div id="loading"> 
+			<Loading/>
+			</div>
+			)
+		}
+	}
+	changeSuccessMessage(message){
+		this.setState({successMessage: message})
+	}
 	render(){
 		return (
+			
 			<div className='TableContainer'>
-				<div className="UserTable">
-				{
-					this.state.data ? 
-					<table className="table" id="scroll">
-					<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
-					<TableRow  savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} 
-					deleteCheckBoxes={this.deleteCheckBoxes} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
-					</table>
-					: <Loading/>
-				}
-				</div>
+					{this.loading()}
+					<div className="UserTable">
+						<table className="table" id="scroll">
+						<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
+						<TableRow  savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} 
+						deleteCheckBoxes={this.deleteCheckBoxes} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
+						</table>
+					</div> 
 					<div className="buttons">
 						<button  onClick={this.changeTemplateState} className="send_button btn_table"  
 						disabled={this.state.disabled}>Send Email</button>
@@ -315,8 +345,11 @@ uploadFile(event ){
 					<div className="buttons">
 						<AddContact getNewContacts={this.getNewContacts}/>
 					</div>
-					<p className="message">{this.state.createMailListMessage}</p>
-			</div>
+					{this.state.successMessage && 
+						<Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>
+					}
+					{/*<p className="message">{this.state.createMailListMessage}</p>*/}
+			</div>	
 		)
 	}
 }

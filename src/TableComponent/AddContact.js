@@ -13,7 +13,7 @@ class AddContact extends Component{
         this.setState({addContactBool: !this.state.addContactBool})
     }
     addNewContact(event){
-        event.preventDefault;
+        
         let arrayCheckRefs = [];
         for(let i in this.refs){
             arrayCheckRefs.push(this.refs[i].value)
@@ -28,6 +28,7 @@ class AddContact extends Component{
             };
             setTimeout(()=>this.setState({addContactBool: !this.state.addContactBool}),100)
             this.props.getNewContacts(contactsObj);    
+            event.preventDefault;
         }
     }
     render(){
@@ -38,7 +39,7 @@ class AddContact extends Component{
             } else {
                     addView = 
                     <div className="add_new_contact_form_container">
-                        <div  className="add_new_contact_form" action="">
+                        <form  className="add_new_contact_form" action="" onSubmit={this.addNewContact}>
                             <label htmlFor="first_name"><br/>        
                                 <span>First name: </span> <input ref="first_name" id="first_name" type="text" required/>
                             </label>
@@ -55,11 +56,11 @@ class AddContact extends Component{
                                 <span>Country:</span> <input ref="country" id="country" type="text" required/>
                             </label>
                             <label htmlFor="email"><br/>
-                                <span>Email:</span> <input ref="email" id="email" type="text" required/>
+                                <span>Email:</span> <input ref="email" id="email" type="email" required/>
                             </label> <br/> 
-                            <button onClick={this.addNewContact}  className='btn_table' id="add_button"> Add </button>
+                            <input   className='btn_table' id="add_button" type="submit" defaultValue="Add"/> 
                             <button onClick={this.changeAddContact}   className='btn_table' id="add_button"> Cancel </button>                          
-                        </div>
+                        </form>
                     </div>
             }
             return(

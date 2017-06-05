@@ -9,7 +9,6 @@ class Success extends Component {
         this.props.changeSuccessMessage(false)
     }
     render() {
-        console.log("sadas")
         return (
             <div  className="success">
                 <div  className="success_message"> 

@@ -73,7 +73,7 @@ class TableRow extends Component{
 				 return (
 					 <div className="edit_block">
 						<div className="edit_form_block">
-							{/*<form  className="edit_form" action="">*/}
+							<form  className="edit_form" action="" onSubmit={this.save}>
 								<label htmlFor="first_name_edit"><br/>        
 									<span>First name: </span> <input ref="first_name_edit" defaultValue={firstName} id="first_name_edit" type="text" required/>
 								</label>
@@ -90,11 +90,11 @@ class TableRow extends Component{
 									<span>Country:</span> <input ref="country_edit" defaultValue={placeholders['Country']} id="country_edit" type="text" required/>
 								</label>
 								<label htmlFor="email_edit"><br/>
-									<span>Email:</span> <input ref="email_edit" defaultValue={placeholders['Email']} id="email_edit" type="text" required/>
+									<span>Email:</span> <input ref="email_edit" defaultValue={placeholders['Email']} id="email_edit" type="email" required/>
 								</label> <br/> 
-								<button onClick={this.save}>Save</button>
+								<input type="Submit" defaultValue="Save"/>
 								<button onClick={this.changeEditMode}>Cancel</button>
-							{/*</form>*/}
+							</form>
 						</div>
 					 </div>
 				 )

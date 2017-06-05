@@ -147,9 +147,10 @@ button:hover{
 	top: 0;
 	bottom: 0;
 	width: 100%;
+	display: flex;
 	background-color: rgba(224,224,224,0.3);
 }
-.template, .delete_popoUp{
+.delete_popoUp{
 	background: white;
 	width: 400px;
 	margin: 0 auto;
@@ -176,6 +177,7 @@ button:hover{
 .subscribingContainer{
     position: fixed;
     top: 0;
+	display: flex;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -183,14 +185,13 @@ button:hover{
 }
 .subscribingMailigList{
 	background: white;
-	width: 45%;
-	height: 300px;
-	margin: 200px auto;
+	width: 20%;
+	height: 30%;
+	margin: auto auto;
 	text-align: center;
 }
 .subscribingMailigList p{
 	width: 150px;
-	float: left;
 	margin: 0;
 	padding:0;
 
@@ -213,14 +214,14 @@ button:hover{
 }
 
 
-@media (max-width:1076px) {
+/*@media (max-width:1076px) {
 	.subscribingMailigList{
 		background: white;
 		width: 90%;
 		height: 80%;
 		margin-top: 100px;
 	}
-}
+}*/
 .mailing_list_form_container{
 	position: fixed;
     top: 0;
@@ -312,4 +313,30 @@ button:hover{
 	.upload_form{
 		width: 100%
 	}
+}
+.templateForm{
+	width: 80%;
+	margin:0 auto;
+	height: 90%;
+    overflow-y: scroll;
+}
+.template{
+	background: white;
+	width: 20%;
+	margin: auto auto;
+	height: 40%;
+	line-height: 2;
+	text-align: left;
+	box-sizing: border-box;
+	padding-left: 20px;
+}
+.tempSendButton{
+	margin-right:1%;
+}
+.mailingLIsts{
+	width: 90%;
+	height: 78%;
+    overflow-y: scroll;
+    margin: 0 auto;
+	
 }

@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import call from '../helpers/call.js';
 import ChooseMailingList from './ChooseMailingList';
 import MailingListTable from './MailingListTable';
-import Loading from '../Loading.js'
+import Loading from '../Loading.js';
+import Success from '../Success.js'
+
+
 
 class MailingLists extends Component {
     constructor(props) {
@@ -14,14 +17,16 @@ class MailingLists extends Component {
             templateData:[],
             sendData:[],
             emailListId: 0,
-            disabled:true
+            disabled:true,
+            successMessage:false
          };
          this.getDefaultEmailLists =this.getDefaultEmailLists.bind(this);
          this.getEmailListById = this.getEmailListById.bind(this);
          this.deleteEmailList = this.deleteEmailList.bind(this);
          this.send = this.send.bind(this);
          this.deleteContacts = this.deleteContacts.bind(this);
-         this.getSendData = this.getSendData.bind(this)
+         this.getSendData = this.getSendData.bind(this);
+         this.changeSuccessMessage = this.changeSuccessMessage.bind(this)
     }
 
     componentDidMount(){
@@ -30,8 +35,11 @@ class MailingLists extends Component {
         call('api/templates','GET')
 		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})}); 
     }
-    getDefaultEmailLists(tableContent, mailingListName){
-        this.setState({tableContent: tableContent, mailingListName:mailingListName})
+         changeSuccessMessage(message){
+         this.setState({successMessage: message})
+     }
+    getDefaultEmailLists(tableContent, mailingListName, emailListId){
+        this.setState({tableContent: tableContent, mailingListName:mailingListName,emailListId: emailListId})
     }
     getEmailListById(id){
         this.setState({emailListId: id})
@@ -41,11 +49,11 @@ class MailingLists extends Component {
     deleteEmailList(id,index){
         let updatedEmailLists = this.state.emailLists;
         call('api/emaillists?id='+ id, 'DELETE').then(res=>{updatedEmailLists.splice(index,1); this.setState({
-            emailLists: updatedEmailLists
+            emailLists: updatedEmailLists,successMessage: "Mailing List is deleted"
         })})
     }
     send(templateId, emailListId){
-        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST');
+        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST').then(()=>this.setState({successMessage: "template sent"}));
     }
     SendEmail(sendData){
 		this.setState({sendData :sendData});
@@ -72,7 +80,8 @@ class MailingLists extends Component {
 			 }
 		 }
          
-		 call('api/emaillists/update?id='+id+'&flag=false','PUT', sendDeleteData).then(res=>this.setState({tableContent: deleteData}));
+		 call('api/emaillists/update?id='+id+'&flag=false','PUT', sendDeleteData).then(res=>this.setState({
+             tableContent: deleteData, successMessage: "Folowing Contacts is deleted"}));
 		
 	}
     render() {
@@ -83,16 +92,16 @@ class MailingLists extends Component {
                 templateData={this.state.templateData} send={this.send} getEmailListById={this.getEmailListById}/> }
                 <div className="mailingListTableContainer">
                     {this.state.tableContent  !== null ? <MailingListTable  
-                    tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/>: <p>waitttttt</p> }
+                    tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/>: <Loading/> }
                     <div className="deleteContactsBlock">
                         <button disabled={this.state.disabled} onClick={this.deleteContacts} className="btn_table"> Delete</button>
                     </div>
                 </div>    
+                  {this.state.successMessage && <Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>}
             </div>
         )
 
         
     }
 }
-
 export default MailingLists;

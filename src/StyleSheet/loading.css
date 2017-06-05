@@ -4,6 +4,14 @@
   width: 10em;
   height: 10em;
 }
+#loading{
+  background: white;
+  position: absolute;
+  top:0;
+  width: 100%;
+  bottom: 0;
+  left:0;
+}
 .loader:empty {
   margin: 60px auto;
   font-size: 10px;

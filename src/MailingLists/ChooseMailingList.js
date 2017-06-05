@@ -1,6 +1,7 @@
  import React, { Component } from 'react';
  import '../StyleSheet/MailingLists.css';
  import call from '../helpers/call.js';
+import Success from '../Success.js'
 
  class ChooseMailingList extends Component {
      constructor(props) {
@@ -10,7 +11,8 @@
              deleteId: 0,
              sendView:false,
              sendId:0,
-             templateId: 0
+             templateId: 0,
+
          }
          this.selectEmailList =this.selectEmailList.bind(this);
          this.changeDeleteConfirm = this.changeDeleteConfirm.bind(this);
@@ -18,7 +20,9 @@
          this.send = this.send.bind(this);
          this.changeSendView = this.changeSendView.bind(this);
          this.catchTemplateId = this.catchTemplateId.bind(this)
+
      }
+
      changeDeleteConfirm(event){
          this.setState({deleteConfirm: !this.state.deleteConfirm, deleteId:event.target.id})
      }
@@ -36,12 +40,12 @@
      deleteEmailList(){
        let index = this.state.deleteId;
        this.props.deleteEmailList(this.props.emailLists[index].EmailListID, index);
-        this.setState({deleteConfirm: !this.state.deleteConfirm})
+        this.setState({deleteConfirm: !this.state.deleteConfirm, successMessage: "Mailing List is deleted"})
 
     }
      componentDidMount(){
          call('api/emaillists?id=' + this.props.emailLists[0].EmailListID,'GET').then(response => {  response.error ? alert(response.message) :
-         this.props.getDefaultEmailLists(response.Contacts, response.EmailListName)});   
+         this.props.getDefaultEmailLists(response.Contacts, response.EmailListName, response.EmailListID)});   
      }
 
      selectEmailList(event){
@@ -55,7 +59,7 @@
         let templateId= this.state.templateId;
         let emailListId = this.props.emailLists[index].EmailListID;
        this.props.send(templateId, emailListId);
-        this.setState({sendView: !this.state.sendView})
+        this.setState({sendView: !this.state.sendView,successMessage: "template sent"})
      }
      catchTemplateId(event){
         this.setState({templateId: event.target.id})
@@ -98,6 +102,7 @@
                 </div>
                 {this.deleteConfirmRender()}
                 {this.sendRender()}
+              
             </div>
         )   
     }
