@@ -1,0 +1,29 @@
+.success{
+	position: fixed;
+	left: 0; 
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: rgba(224,224,224,0.07);
+	display: flex
+}
+.success_message{
+    width: 400px;
+    height: 200px;
+    background: white;
+	margin: auto auto
+}
+.success_message{
+	color: forestgreen;
+	text-align: center
+}
+.success_confirm{
+	width: 100px;
+	text-align: center;
+	border: 2px solid grey;
+	margin: 0 auto
+}
+.success_confirm:hover{
+	background: grey;
+	cursor: pointer
+}

@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import TableHeader from'./TableHeader.js';
 import TableRow from './TableRow.js';
 import AddContact from './AddContact.js';
+import Loading from '../Loading.js';
+import Success from '../Success.js';
 import '../StyleSheet/Table.css';
-//import Ajax from '../Ajax.js';
 import call from '../helpers/call.js'
 class Table extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			data: [],
+			data: false,
 			sendData: [],
 			disabled: true,
 			namingEmailList: false,
@@ -49,11 +50,17 @@ class Table extends Component{
 	}
 	componentDidMount(){
 		let self = this;
-		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : self.setState({data: response})});
+		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : 
+				self.setState({data: response})});
+
 		call('api/templates','GET')
 		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})});
 		call('api/emaillists','GET')
-		.then(response => {  response.error ? alert(response.message) :this.setState({mailingLists: response}); console.log(response)});
+		.then(response => {  response.error ? alert(response.message) :this.setState({mailingLists: response})});
+	}
+	changeMailingListDisable(event){
+		this.setState({mailingListDisabled:false});
+		this.setState({mailingListId:event.target.id});
 	}
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
@@ -87,8 +94,20 @@ class Table extends Component{
 	changeUpload(){
 		this.setState({upload: !this.state.upload})
 	}
-	uploadFile(url, data){
-		
+uploadFile(event ){
+		event.preventDefault();
+		let data = new FormData();
+    	let fileData = document.querySelector('input[type="file"]').files[0];
+    	data.append("data", fileData);	
+		fetch("http://crmbetc.azurewebsites.net/api/contacts/upload", {
+     		 mode: 'no-cors',
+      		method: "POST",
+			  "Content-Type": "multipart/form-data",
+        	"Accept": "application/json",
+      		body: data
+    	}).then(function (res) {
+	  		return res.text()
+    	}).then(res=> res).then(res=>console.log(res));
 	}
 	uploadRender(){
 		if(this.state.upload){
@@ -163,7 +182,6 @@ class Table extends Component{
 	}
 	postData(sendData){
 		sendData = this.state.sendData;
-		console.log(sendData)
 		call('api/sendemails?template='+this.state.templateId,'POST', sendData);
 		let checkBoxes = this.state.checkBoxes;
 /*		for(let i in checkBoxes){
@@ -174,7 +192,6 @@ class Table extends Component{
 		this.changeTemplateState();
 	}	
 	getNewContacts(newContactobj){
-		let self = this;
 		let newData = this.state.data;
 		call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); this.setState({data:newData})})
 	}
@@ -217,7 +234,6 @@ class Table extends Component{
 		}
 	}
 	radioChange(event){
-		const templateArr = this.state.templateData;
 		if(event.target.checked === true){
 			this.setState({templateId:event.target.id})
 		}
@@ -231,17 +247,16 @@ class Table extends Component{
 		call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(response=>console.log(response));	
 		this.changeMailingListShow();
 	}
-	changeMailingListDisable(event){
+/*	changeMailingListDisable(event){
 		this.setState({mailingListDisabled:false});
 		this.setState({mailingListId:event.target.id})
 
-	}
+	}*/
 
 	addToMailingListRender(){
 		if(this.state.mailingListShow){
 			if(this.state.mailingLists.length > 0){
 				let mailingLists = this.state.mailingLists;
-				console.log(mailingLists)
 				let choose = mailingLists.map((item,index)=>{
 					return <p onClick={this.changeMailingListDisable} key={index} id={item.EmailListID}>{item.EmailListName}</p>
 				})
@@ -268,11 +283,15 @@ class Table extends Component{
 		return (
 			<div className='TableContainer'>
 				<div className="UserTable">
+				{
+					this.state.data ? 
 					<table className="table" id="scroll">
 					<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
 					<TableRow  savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} 
 					deleteCheckBoxes={this.deleteCheckBoxes} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
 					</table>
+					: <Loading/>
+				}
 				</div>
 					<div className="buttons">
 						<button  onClick={this.changeTemplateState} className="send_button btn_table"  

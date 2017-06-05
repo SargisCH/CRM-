@@ -1,39 +1,38 @@
-// import React, { Component } from 'react';
-// import '../StyleSheet/MailingLists.css';
+ import React, { Component } from 'react';
+ import '../StyleSheet/MailingLists.css';
 
-// class MailingListTable extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-// 			sendArray:[],
-	// 		//checkBoxes:[]
-	// 	};
-	// 	this.checkBoxChange = this.checkBoxChange.bind(this);
-    // }
-	// checkBoxChange(event){
-	// 		let index = event.target.id;
-	// 		let sendArray = this.state.sendArray;
-	// 		if(event.target.checked === true){
-	// 			sendArray.push(this.props.tableContent[index].GuID);
-	// 			this.setState({sendArray: sendArray});
-	// 		}else{
-	// 			for(let i in sendArray){
-	// 				if(this.props.tableContent[index].GuID === sendArray[i]){
-	// 					sendArray.splice(i, 1);
+ class MailingListTable extends Component {
+     constructor(props) {
+         super(props);
+         this.state = {
+			 sendArray:[],
+			 deleteContacts : []
+	 	};
+		this.checkBoxChange = this.checkBoxChange.bind(this);
+     }
+	 checkBoxChange(event){
+	 		let index = event.target.id;
+	 		let sendArray = this.state.sendArray;
+	 		if(event.target.checked === true){
+	 			sendArray.push(this.props.tableContent[index].GuID);
+	 			this.setState({sendArray: sendArray});
+	 		}else{
+	 			for(let i in sendArray){
+	 				if(this.props.tableContent[index].GuID === sendArray[i]){
+						sendArray.splice(i, 1);
 						//console.log(this.props.tableContent[index].GuID)
-	// 				}
-	// 			}
-	// 		}
-	// 		this.props.getSendData(sendArray);
-
-	// 	 }
-    // render() {
+ 					}
+	 			}
+			}
+			 this.props.getSendData(sendArray)
+	 	 }
+     render() {
 /*        if(this.state.emailLists.length>0){
             console.log(this.state.emailLists)
         }*/
-        //  const data=this.props.tableContent
-		 //console.log(this.props.tableContent)
-		      /*const row = data.map((data,index)=>
+		 console.log(this.props.tableContent)
+          const data=this.props.tableContent
+		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
 					 <td><input className="checkBoxMailingList"  onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
 			     	<td  key={`${data['Full Name']}Full Name`}>
@@ -55,7 +54,18 @@
 		     	);
         return (
             <div className="mailing_list_table">
+				<h1> {this.props.mailingListName}</h1>
                  <table>
+				 <thead>
+				 	<tr>
+						<th>Select</th>
+						<th>Full Name</th>
+						<th> Companty Name</th>
+						<th>Position</th>
+						<th>Country</th>
+						<th>Email</th>
+					</tr>
+				 </thead>
                     <tbody>
                         {row}
                     </tbody>
@@ -64,7 +74,7 @@
         )
     }
 }
-export default MailingListTable;*/
+export default MailingListTable;
 						
 
         

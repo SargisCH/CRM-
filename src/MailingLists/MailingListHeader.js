@@ -7,7 +7,6 @@ class MailingListHeader extends Component{
 					<th className="mailingListName">Name</th>
 					<th className="mailingListSend">Send Mail</th>
                     <th className="mailingListDelete">Delete</th>
-					
 				</tr>
 			</thead>
 		);

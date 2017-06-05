@@ -21,38 +21,74 @@ th, td {
 	overflow:scroll;
 	/*overflown scroll chi ashxatum */
 }
-#checkBox{
+.mailingListItemsContainer{
+    background: grey;
     text-align: center;
 }
-.mailingListName:hover{
-    cursor:pointer;
-    background: grey;
+.choose_mailing_list{
+    width: 20%;
+    float: left;
+    margin-top: 86px;
+    margin-left: 30px; 
 }
-.contacts{
+.options:hover{
+    background: white;
+    cursor: pointer
+}
+/*.mailing_list_table{
+
+}*/
+.fa-times{
+    color: black;
+
+}
+.fa-times:hover{
+    color: red
+}
+.options i{
+    float: right;
+    font-size: 20px;
+}
+.fa-envelope-o{
+    margin-right: 5px;
+}
+.mailing_list_table h1{
+    text-align: center;
+    margin: 0;
+}
+.deleteConfirmContainer{
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    width: 100%;
+    display: flex;
     background: rgba(176,176,176,0.5);
-}
-.contacts table{
     width: 100%;
 }
-.close{
-    width: 80%;
-     margin: 100px auto;
-    font-size:32px;  
-    text-align: right;
-    cursor: pointer;
+.deleteConfirm{
+    background: white;
+    margin: auto auto;
+    width: 200px;
+    height: 100px;
+    text-align: center;
 }
-@media (max-width:500px){
-    .contacts_table_container{
-        overflow-x:scroll;
-        margin-top: 0;
-        width: 100%  
-    }
-    .contacts_table_container table{
-        width: 100%;
-    }
+.deleteConfirm button{
+    margin-left: 10px; 
+}
+
+.deleteButton{
+    margin-top: 20px;
+}
+.mailingListTableContainer{
+        width: 70%;
+    float: left;
+    margin-left: 5%;
+    margin-top: 30px; 
+}
+.deleteContactsBlock{
+    margin-top: 30px
+}
+.mailingListName{
+    display: inline-block;
+    width:70%;
 }
