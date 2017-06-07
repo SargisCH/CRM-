@@ -109,27 +109,27 @@ class TableRow extends Component{
 				 return (
 					 <div className="edit_block">
 						<div className="edit_form_block">
-							<div  className="edit_form" >
+							<div  className="edit_form">
 								<label htmlFor="first_name_edit"><br/>        
-									<span>First name: </span> <input ref="first_name_edit" defaultValue={firstName} id="first_name_edit" type="text" required/>
+									<span className="edit_value">First name: </span> <input ref="first_name_edit" className="edit_input" defaultValue={firstName} id="first_name_edit" type="text" required/>
 								</label>
 								<label htmlFor="last_name_edit"><br/>             
-									<span>Last name:</span> <input ref="last_name_edit"  defaultValue={lastName} id="last_name_edit" type="text" required/>
+									<span className="edit_value">Last name:</span> <input ref="last_name_edit" className="edit_input"  defaultValue={lastName} id="last_name_edit" type="text" required/>
 								</label>
 								<label htmlFor="company_name_edit"><br/>                
-									<span>Company name:</span> <input ref="company_name_edit" defaultValue={placeholders['Company Name']} id="company_name_edit" type="text" required/>
+									<span className="edit_value">Company name:</span> <input ref="company_name_edit" className="edit_input" defaultValue={placeholders['Company Name']} id="company_name_edit" type="text" required/>
 								</label>
 								<label htmlFor="position_edit"><br/>                
-									<span>Position:</span> <input ref="position_edit" defaultValue={placeholders['Position']} id="position_edit" type="text" required/>
+									<span className="edit_value">Position:</span> <input ref="position_edit" className="edit_input" defaultValue={placeholders['Position']} id="position_edit" type="text" required/>
 								</label>
 								<label htmlFor="country_edit"><br/>     
-									<span>Country:</span> <input ref="country_edit" defaultValue={placeholders['Country']} id="country_edit" type="text" required/>
+									<span className="edit_value">Country:</span> <input ref="country_edit" className="edit_input" defaultValue={placeholders['Country']} id="country_edit" type="text" required/>
 								</label>
 								<label htmlFor="email_edit"><br/>
-									<span>Email:</span> <input ref="email_edit" defaultValue={placeholders['Email']} id="email_edit" type="email" required/>
+									<span className="edit_value">Email:</span> <input ref="email_edit" className="edit_input" defaultValue={placeholders['Email']} id="email_edit" type="email" required/>
 								</label> <br/> 
-								<button onClick={this.save} > Save </button>
-								<button onClick={this.changeEditMode}>Cancel</button>
+								<input type="button"  onClick={this.save} defaultValue="Save" className="edit_save edit_btn"/>
+								<button onClick={this.changeEditMode} className="edit_btn">Cancel</button>
 								{this.state.errorMessage && <p className="error">{this.state.errorMessage}</p>}
 								{this.state.emptyField && <p className="error">{this.state.emptyField}</p>}
                             	{this.state.emailType && <p className="error">{this.state.emailType}</p>}
@@ -138,7 +138,7 @@ class TableRow extends Component{
 					 </div>
 				 )
 			 }else{
-				 return <i  id ={id} className="fa fa-pencil edit" aria-hidden="true" onClick={this.editOnClicks}></i>
+				 return <i  id ={id} className="fa fa-edit" aria-hidden="true" onClick={this.editOnClicks}></i>
 			 }
 		 }
 	     render(){

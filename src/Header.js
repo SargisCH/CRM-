@@ -24,7 +24,7 @@ class Header extends Component{
                     </div>
                     <div className="header flex">
                         <div className="logo">
-                            <h1>BetBoard</h1>
+                            <h1>BetCRM</h1>
                         </div>
                         {/*<div className="user flex">
                             <ul className="list flex">

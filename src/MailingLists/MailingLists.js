@@ -20,7 +20,7 @@ class MailingLists extends Component {
             disabled:true,
             successMessage:false
          };
-         /*this.getDefaultEmailLists =this.getDefaultEmailLists.bind(this);*/
+         this.getDefaultEmailLists =this.getDefaultEmailLists.bind(this);
          this.getEmailListById = this.getEmailListById.bind(this);
          this.deleteEmailList = this.deleteEmailList.bind(this);
          this.send = this.send.bind(this);
@@ -38,9 +38,9 @@ class MailingLists extends Component {
          changeSuccessMessage(message){
          this.setState({successMessage: message})
      }
-/*    getDefaultEmailLists(tableContent, mailingListName, emailListId){
+    getDefaultEmailLists(tableContent, mailingListName, emailListId){
         this.setState({tableContent: tableContent, mailingListName:mailingListName,emailListId: emailListId})
-    }*/
+    }
     getEmailListById(id){
         this.setState({emailListId: id})
         call('api/emaillists?id=' + id,'GET')
@@ -91,15 +91,17 @@ class MailingLists extends Component {
                 emailLists={this.state.emailLists}  deleteEmailList={this.deleteEmailList} 
                 templateData={this.state.templateData} send={this.send} getEmailListById={this.getEmailListById}/> }
                 <div className="mailingListTableContainer">
-                    {this.state.tableContent  !== null && <MailingListTable  
-                        tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/> }
-                    {this.state.tableContent  !== null &&<div className="deleteContactsBlock">
+                    {this.state.tableContent  !== null ? <MailingListTable  
+                    tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/>: <Loading/> }
+                    <div className="deleteContactsBlock">
                         <button disabled={this.state.disabled} onClick={this.deleteContacts} className="btn_table"> Delete</button>
-                    </div>}
+                    </div>
                 </div>    
                   {this.state.successMessage && <Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>}
             </div>
-        ) 
+        )
+
+        
     }
 }
 export default MailingLists;

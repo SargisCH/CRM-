@@ -1,197 +1,327 @@
 .UserTable {
 	width: 100%;
-   height: 100%;
+   	height: 100%;
     /*background-color: #f1f1f1;*/
     color: #513654;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     box-sizing: border-box;
-	padding:25px;
-	height: 100%;
-	overflow: auto
-	
-}
-#delete_button{
-	background:#e91e63;
-}
-button:disabled{ 
-  background-color: #cccccc !important;
-  color: #666666;
-  pointer-events: none;
-}
+	padding:1.1%;
+	overflow: auto;
+	}
 .TableContainer{
-	height: 80%;
+	height: 90%;
 }
-
-/*#scroll{
-	width: 100%;
-    height: 80%;
-	overflow:scroll;
-}*/
-#edit_td{
-	text-align: center;
+.table tr:nth-child(even){
+	background-color: #f2f2f2
 }
 .table {
     width: 100%;
     margin: 0px auto;
-    border: solid 2px #504b4b;
     border-collapse: collapse;
 }
 .table td{
-	border:solid 2px #504b4b;
 	border-collapse: collapse;
 	text-align: left;
 }
 .table th{
-	border:solid 2px #504b4b;
 	border-collapse: collapse;
-	text-align: left;
-}
-/*.tableheader{
-	width: 100%;
 	text-align: center;
-	color: white;
+	color: azure;
+    background: #1A1F25;
+}
+button:disabled{ 
+  background-color: #cccccc !important;
+  color: #A9A9A9 !important;
+  pointer-events: none;
+
+}
+.buttons button{
+	outline: none;
+	transition: 2s;
+    color: #fff;
+    background-color: #1A1F25;
+    border-radius: .1rem;
+	border: 0px solid transparent;
+	cursor:pointer;
+	box-shadow: 0 0px 0px 0 rgba(40, 47, 71,0.4);
+	width: 150px;
+	float: left;
+	margin: 1% 1% 0 1%;
+	padding: 1%;
+}
+/*#delete_button{
+	background:#EA4335
 }*/
+button:hover{
+	 background-color: rgb(40, 47, 71); 
+	 transition: 1s;
+}
+.fa-edit{
+	cursor: pointer;
+	font-size:28px;
+}
 .addtablerow{
 	width: 100%;
-}
-
-#theader{
-	height: 30px;
-    color: #666467;
-    text-align: center;
-    font-size: 2.5em;
-    padding: 10px;
 }
 
 .AddRow{
 	display:inline-block;
     margin-top: 10px;
 }
-
-button{
-	padding: 1%;
-    color: #fff;
-    background-color: #009688;
-    border-radius: .1rem;
-	border: 0px solid transparent;
-    transition: .5s;
-	cursor:pointer;
-	box-shadow: 0 0px 0px 0 rgba(56,38,0,1);
-}
-button:hover{
-	 background-color: #735a73; 
-}
 .check{
 	float: left;
 	margin-top: 5px;
 	margin-left: 20px;
 }
-/*.send_button{
-	margin-top: 30px;
-}*/
 .check{
 	margin-left:39%;
 	margin-top: 2px;
 }
-.add_contact_container{
-	margin-top: 50px;
-	width: 100px;
-	display: inline;
- 
+.templateForm{
+	height: 290px;
+    overflow: auto;
+	margin: 0 5%;
 }
-.add_new_contact_form span{
-	display: inline-block;
-	width: 150px;
+.template{
+	background: rgba(44, 44, 55, 0.9);
+	width: 300px;
+	height: 380px;
+	margin: auto auto;
+	line-height: 2;
+	text-align: left;
+	box-sizing: border-box;
 }
-.add_new_contact_form label{
-	line-height: 2; 
+.template p {
+	font-size: 1.8em;
+	font-style: italic;
+	margin: 3% auto;
+	color: #F2F2F2;
+	width: 78%;
 }
-/*#add_button{
-	background: #009688;
-	display: inline-block;
-	width: 75px;
-	margin: 1%;
+.block{
+	position: fixed;
+	left: 0; 
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	background-color: rgba(44, 44, 55, 0.4);
 }
-#add_button:hover{
-	background: #735a73;
+.template button {
+	width: 60px;
+	margin-left: 5%;
+	color: #1A1F25;
+    background-color: #F9F4F5;
+	font-weight: bold;
+    border-radius: .1rem;
+	border: 0px solid transparent;
+	height: 30px;
+	cursor:pointer;
+	box-shadow: 0 0px 0px 0 rgba(40, 47, 71,0.4);
+	padding: 1%;
 }
-.delete_button{
-	background: #e91e63;*/
-	/*margin-left: 15px;*/
-/*}*/
-
-.edit{
-	cursor: pointer
+.delete_popoUp button:hover,.mailing_list_form button:hover,.template button:hover{
+	background: #85858A;
 }
+input[type="radio"]{
+    display:none;
+}
+input[type="radio"]:checked+span{
+    background: #1A1F25;
+}
+.templateSpan{
+	cursor: pointer;
+	display: block;
+	color: azure;
+	padding: 1%;
+}
+.templateSpan:hover{
+	background: #1A1F25;
+}
+/*.message{
+	color: forestgreen
+}*/
+.mailing_list_form{
+	background: rgba(44, 44, 55, 0.9);
+	width: 400px;
+	height: 200px;
+	margin: auto auto;
+	box-sizing: border-box;
+	display: flex;
+}
+.mailing_list_form button{
+	color: #1A1F25;
+    background-color: #F9F4F5;
+	font-weight: bold;
+	height: 25px;
+    border-radius: .1rem;
+	border: 0px solid transparent;
+	cursor:pointer;
+	box-shadow: 0 0px 0px 0 rgba(40, 47, 71,0.4);
+	padding: 1%;
+	margin-top: 11%;
+	box-sizing: border-box;
+	margin-left: 0 !important;
+	width: 142.9px;
+}
+#mail_btn_cancel{
+	margin-right: 0;
+}
+#btn_create{
+	margin-right: 5%;
+}
+.mailingListButtons{
+	text-align: left;
+}
+.mailing_list_input{
+	margin: auto auto;
+}
+.mailing_list_input p{
+	color:azure;
+}
+.delete_popoUp{
+	width: 300px;
+    height: 150px;
+    background: rgba(44, 44, 55, 0.9);
+	margin: auto auto;
+	color: #F9F4F5;
+	padding: 5px;
+	text-align: center;
+}
+.delete_popoUp p {
+	margin: 11% 0 11% 0;
+}
+/*.delete_container{
+	margin: auto auto;
+}*/
+.delete_popoUp button {
+	width: 80px;
+	margin: 0 12% 0 0;
+	color: #1A1F25;
+    background-color: #F9F4F5;
+	font-weight: bold;
+	height: 25px;
+    border-radius: .1rem;
+}
+#popup_delete {
+	margin-left: 16.5%;
+}
+.inputfile {
+	width: 200px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.upload_label {
+	display: block;
+	cursor: pointer;
+}
+#upload_button{
+	cursor: default;
+}
+/*.upload_form{
+	background: rgba(44, 44, 55, 0.9);
+	width: 400px;
+	height: 200px;
+	margin: auto auto;
+	box-sizing: border-box;
+	
+}
+.upload_form button{
+	margin-left: 20px;
+}*/
 .edit_block{
 	position: fixed;
 	left: 0; 
 	top: 0;
 	bottom: 0;
 	width: 100%;
-	background-color: rgba(224,224,224,0.07);
+	display: flex;
+	background: rgba(44, 44, 55, 0.06);
 }
 .edit_form_block{
-	background: white;
+	background: rgba(44, 44, 55, 0.9);
+	color: azure;
 	width: 400px;
-	margin: 0 auto;
-	height: 250px;
-	line-height: 2;
-	margin-top:250px; 
-	text-align: left;
-	box-sizing: border-box;
-	padding-left: 20px;
-}
-.templateBlock, .delete_block{
-	position: fixed;
-	left: 0; 
-	top: 0;
-	bottom: 0;
-	width: 100%;
-	display: flex;
-	background-color: rgba(224,224,224,0.3);
-}
-.delete_popoUp{
-	background: white;
-	width: 400px;
-	margin: 0 auto;
-	height: 250px;
-	line-height: 2;
-	margin-top:250px; 
-	text-align: left;
-	box-sizing: border-box;
-	padding-left: 20px;
-}
-@media (max-width:768px) {
-	.UserTable{
-		width:100%;
-	}
-}
-@media (max-width:468px) {
-	#theader{
-		height: 30px;
-		color: #666467;
-		text-align: center;
-		font-size: 1.5em;
-		}
-}
-.subscribingContainer{
-    position: fixed;
-    top: 0;
-	display: flex;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(176,176,176,0.5);
-}
-.subscribingMailigList{
-	background: white;
-	width: 20%;
-	height: 30%;
 	margin: auto auto;
+	height: 290px;
+	line-height: 2;
+	text-align: left;
+	display: flex;
+}
+.edit_form{
+	width: 80%;
+	margin: auto auto;
+}
+.add_contact_value,.edit_value{
+	width: 110px;
+	display: inline-block;
+}
+.edit_input,.add_input{
+	color:#85858A;
+	outline: none;
+	border-radius: 3px;
+	padding: 1%;
+	margin: 2px;
+}
+.edit_btn,.add_btn{
+	outline: none;
+	width: 60px;
+    background-color: #F9F4F5;
+	font-weight: bold;
+    border-radius: .1rem;
+	border: 0px solid transparent;
+	padding: 2%;
+	cursor:pointer;
+	box-shadow: 0 ;
+	margin: 7% 5% 0 0;
+}
+.add_btn:hover,.edit_btn:hover{
+	transition: 1s;
+	background: #1A1F25;
+	color: azure;
+}
+#edit_td{
 	text-align: center;
 }
+.add_new_contact_form label{
+	line-height: 2; 
+}
+.add_new_contact_form{
+	background: rgba(44, 44, 55, 0.9);
+	color: azure;
+	width: 400px;
+	margin: auto auto;
+	height: 300px;
+	box-sizing: border-box;
+	display: flex;
+	/*padding-top: 30px;
+	padding-left: 20px;*/
+}
+.add_contact_content{
+	width: 90%;
+	margin: auto auto;
+}
+.add_input{
+	color: black !important;
+}
+/*#add_submit{
+	display: block;
+	width: 50px;
+}*/
+.subscribingMailigList{
+	background: rgba(44, 44, 55, 0.9);
+	width: 300px;
+	height: 380px;
+	margin: auto auto;
+	line-height: 2;
+	text-align: left;
+	box-sizing: border-box;
+}
 .subscribingMailigList p{
-	width: 150px;
+	display: block;
 	margin: 0;
 	padding:0;
 
@@ -200,11 +330,6 @@ button:hover{
 	background: grey;
 	cursor:pointer
 }
-.mailingListButtons{
-	text-align: left;
-}
-
-
 .subscribingMailigList button{
 	margin-top: 20px;
 	margin-left: 20px
@@ -212,94 +337,34 @@ button:hover{
 .clear{
 	clear: both;
 }
-
-
-/*@media (max-width:1076px) {
-	.subscribingMailigList{
-		background: white;
-		width: 90%;
-		height: 80%;
-		margin-top: 100px;
-	}
-}*/
-.mailing_list_form_container{
-	position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(176,176,176,0.5);
+.mailingLIsts{
+	
+	height: 78%;
+    overflow-y: auto;
+    margin: 0 auto;
 }
-.mailing_list_form{
-		background: white;
-	width: 45%;
-	height: 300px;
-	margin: 200px auto;
-	box-sizing: border-box;
-	padding-top: 30px;
-	padding-left: 20px;
+.existing_mailing_list{
+	margin: auto auto;
 }
-.mailing_list_form button{
-	margin-left: 20px;
-}
-.upload_form_container{
-	position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(176,176,176,0.5);
-}
-.upload_form{
-		background: white;
-	width: 45%;
-	height: 300px;
-	margin: 200px auto;
-	box-sizing: border-box;
-	padding-top: 30px;
-	padding-left: 20px;
-}
-.upload_form button{
-	margin-left: 20px;
-}
-.add_new_contact_form_container{
-		position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(176,176,176,0.5);
-}
-.add_new_contact_form{
-	background: white;
-	width: 45%;
-	height: 300px;
-	margin: 200px auto;
-	box-sizing: border-box;
-	padding-top: 30px;
-	padding-left: 20px;
-}
-@media (max-width:800px) {
-	.add_new_contact_form{
-		margin-top: 0;
-		height: 100%;
+@media (max-width:768px) {
+	.UserTable{
+		width:100%;
 	}
 }
-@media (max-width:512px) {
-	.add_new_contact_form{
-		width: 100%;
-		height: 100%;
-		margin-top: 0;
+@media(max-height:400px){
+	.template{
+		height: 250px;
+	}
+	.templateForm{
+		height: 170px;
 	}
 }
-.message{
-	color: forestgreen
-}
-.buttons{
-	width: 30%;
-	float: left;
-	margin-top: 10px;
-	margin-left: 20px;
+@media (max-width:468px) {
+	#theader{
+		height: 30px;
+		text-align: center;
+		font-size: 1.5em;
+		}
 }
 @media (max-width:618px) {
 	.buttons{
@@ -314,32 +379,72 @@ button:hover{
 		width: 100%
 	}
 }
-.templateForm{
-	width: 80%;
-	margin:0 auto;
-	height: 90%;
-    overflow-y: scroll;
+/*@media (max-width:800px) {
+	.add_new_contact_form{
+		height: auto;
+	}
+}*/
+@media (max-width:385px) {
+	.add_new_contact_form{
+		height: auto;
+	}
+	.edit_form_block{
+		height: auto;
+	}
+	.edit_btn{
+		margin-bottom: 2%;
+	}
 }
-.template{
-	background: white;
-	width: 20%;
-	margin: auto auto;
-	height: 40%;
-	line-height: 2;
-	text-align: left;
-	box-sizing: border-box;
-	padding-left: 20px;
+
+/*#delete_button{
+	background:#e91e63;
+}*/
+
+/*#theader{
+	height: 30px;
+    color: #666467;
+    text-align: center;
+    font-size: 2.5em;
+    padding: 10px;
+}*/
+
+/*.tableheader{
+	width: 100%;
+	text-align: center;
+	color: white;
+}*/
+
+/*.send_button{
+	margin-top: 30px;
+}*/
+/*.add_contact_container{
+	margin-top: 50px;
+	width: 100px;
+	display: inline;
+ 
+}*/
+/*#add_button{
+	background: #009688;
+	display: inline-block;
+	width: 75px;
+	margin: 1%;
 }
-.tempSendButton{
-	margin-right:1%;
+#add_button:hover{
+	background: #735a73;
 }
-.mailingLIsts{
-	width: 90%;
-	height: 78%;
-    overflow-y: scroll;
-    margin: 0 auto;
-	
-}
-.error{
-	color:red
-}
+.delete_button{
+	background: #e91e63;*/
+	/*margin-left: 15px;*/
+/*}*/
+
+/*.edit{
+	cursor: pointer
+}*/
+/*@media (max-width:1076px) {
+	.subscribingMailigList{
+		background: white;
+		width: 90%;
+		height: 80%;
+		margin-top: 100px;
+	}
+}*/

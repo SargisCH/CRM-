@@ -15,8 +15,10 @@ class Success extends Component {
         return (
             <div  className="success">
                 <div  className="success_message"> 
-                    <h1>{this.props.message}</h1>
-                    <p className="success_confirm" onClick={this.changeSuccessMessage}>OK</p>
+                    <div className="successContainer">
+                        <p>{this.props.message}</p>
+                        <p className="success_confirm" onClick={this.changeSuccessMessage}>OK</p>
+                    </div>
                 </div>
             </div>
         );

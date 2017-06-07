@@ -11,9 +11,10 @@
   width: 100%;
   bottom: 0;
   left:0;
+  display: flex;
 }
 .loader:empty {
-  margin: 60px auto;
+  margin: auto auto;
   font-size: 10px;
   position: relative;
   text-indent: -9999em;

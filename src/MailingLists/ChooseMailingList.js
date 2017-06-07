@@ -43,10 +43,10 @@ import Success from '../Success.js'
         this.setState({deleteConfirm: !this.state.deleteConfirm, successMessage: "Mailing List is deleted"})
 
     }
-/*     componentDidMount(){
+     componentDidMount(){
          call('api/emaillists?id=' + this.props.emailLists[0].EmailListID,'GET').then(response => {  response.error ? alert(response.message) :
          this.props.getDefaultEmailLists(response.Contacts, response.EmailListName, response.EmailListID)});   
-     }*/
+     }
 
      selectEmailList(event){
         let index = event.target.id;

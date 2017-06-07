@@ -17,7 +17,7 @@ class Table extends Component{
 			checkBoxes:[],
 			templateData:null,
 			template: false,
-			templateId:"",
+			templateId:false,
 			successMessage: false,
 			upload: false,
 			mailingLists: [],
@@ -26,8 +26,9 @@ class Table extends Component{
 			mailingListDisabled: true,
 			mailingListId:"",
 			mailingListName:"",
+			templateDisabled:true,
 			file: false,
-
+			requestLoad: false
 			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
@@ -41,7 +42,6 @@ class Table extends Component{
 		this.createTemplates = this.createTemplates.bind(this);
 		this.changeTemplateState = this.changeTemplateState.bind(this);
 		this.radioChange = this.radioChange.bind(this);
-		this.changeUpload =this.changeUpload.bind(this);
 		this.changeMailingListShow = this.changeMailingListShow.bind(this);
 		this.addToMailingList = this.addToMailingList.bind(this);
 		this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this);
@@ -50,8 +50,8 @@ class Table extends Component{
 		this.changeMailingListDisable = this.changeMailingListDisable.bind(this);
 		this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
 		this.uploadFile = this.uploadFile.bind(this);
+		this.changeUpload =this.changeUpload.bind(this);
 		this.addContactsFile = this.addContactsFile.bind(this)
-
 	}
 	componentDidMount(){
 		let self = this;
@@ -63,15 +63,7 @@ class Table extends Component{
 		call('api/emaillists','GET')
 		.then(response => {  response.error ? alert(response.message) :this.setState({mailingLists: response})});
 	}
-	changeMailingListDisable(event){
-		this.setState({
-			mailingListDisabled:false,
-			mailingListId:event.target.id,
-			mailingListName: event.target.dataset.name
-			
-		});
-		this.setState({});
-	}
+	
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
 	}
@@ -84,27 +76,28 @@ class Table extends Component{
 				contacts: mailingLists
 			}
 			let mailinglist  =this.state.mailingLists
-	
-			call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Your Mailing List is created '});
+ 
+			call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Mailing List has been created '});
 				mailinglist.push(res);
 			})
-		}	
-
+		}
 	}
 	createEmailListRender(){
 		if(this.state.namingEmailList){
 			return (
-				<div className="mailing_list_form_container">
+				<div className="mailing_list_form_container block">
 					<div className="mailing_list_form">
-						<p>Name of mailing list <input  ref="mailingListName" type="text"/></p>
-						<button className="btn_table" onClick={this.createEmailList}> Create </button>
-						<button className="btn_table" onClick={this.changeNamilngList} > Cancel </button>
+						<div className="mailing_list_input">
+							<p>Name of mailing list <input  ref="mailingListName" type="text"/></p>
+							<button id="btn_create" className="btn_table" onClick={this.createEmailList}> Create </button>
+							<button id="mail_btn_cancel" className="btn_table" onClick={this.changeNamilngList} > Cancel </button>
+						</div>
 					</div>
 				</div>
 
 			)
 		}else{
-			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} disabled={this.state.disabled}> Create New Mailing List </button>
+			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} disabled={this.state.disabled}> Create Mailing List </button>
 		}
 	}
 	changeUpload(){
@@ -116,8 +109,8 @@ class Table extends Component{
 				this.setState({data: response})})
 	}
 	uploadFile(event){
-		if(this.refs.upload_input.value !== ""){
-
+		if(this.refs.upload_input.value !== "") {
+		// this.setState({requestLoad:true})
 		event.preventDefault();
 		let data = new FormData();
     	let fileData = document.querySelector('input[type="file"]').files[0];
@@ -133,31 +126,9 @@ class Table extends Component{
 			}).then(res => {this.setState({successMessage: res})})
 			this.changeUpload();
 			this.setState({file:true})
-/*		fetch('http://crmbetc.azurewebsites.net/api/contacts/upload', {
-        	method:'POST',
-        	body:data   
-    	}).then(function(res) {
-        	return res.json()
-    	}).catch(function(e) {
-        	console.log('Error',e);
-    	}).then(res => console.log(res,this));*/
 		}
-}	
-	uploadRender(){
-		if(this.state.upload){
-			return (
-				<div className="upload_form_container">
-					<div className="upload_form">
-						<input  ref="upload_input" type="file"/>
-						<button className="btn_table" onClick={this.uploadFile}> Upload </button>
-						<button className="btn_table" onClick={this.changeUpload} > Cancel </button>
-					</div>
-				</div>
-			)
-		}else{
-			return <button  className="btn_table upload" onClick={this.changeUpload} > Upload File </button>
-		}
-	}
+		this.setState({requestLoad:false})
+	}	
 	getSendData(sendData){
 		this.setState({sendData :sendData});
 	}
@@ -195,11 +166,11 @@ class Table extends Component{
 	createDeletePopUp(){
 		if(this.state.delete){
 			return(
-				<div className="delete_block">
+				<div className="delete_block block">
 					<div className="delete_popoUp">
-						<p>Are you sure?</p>
-						<button onClick={this.deleteContacts}>Delete</button>
-						<button onClick={this.changeDeleteState}>Cancel</button>
+							<p>Are you sure?</p>
+							<button onClick={this.deleteContacts} id="popup_delete">Delete</button>
+							<button onClick={this.changeDeleteState}>Cancel</button>
 					</div>
 				</div>
 			)
@@ -215,13 +186,8 @@ class Table extends Component{
 	}
 	postData(sendData){
 		sendData = this.state.sendData;
-		call('api/sendemails?template='+this.state.templateId,'POST', sendData).then(()=>this.setState({successMessage: "Your Email Sent"}));
+		call('api/sendemails?template='+this.state.templateId,'POST', sendData).then(()=>this.setState({successMessage: "Email has been sent successfully"}));
 		let checkBoxes = this.state.checkBoxes;
-/*		for(let i in checkBoxes){
-			checkBoxes[i].checked = false
-		}*/
-/*		this.setState({checkBoxes: checkBoxes})
-		this.setState({disabled:true})*/
 		this.changeTemplateState();
 	}	
 	getNewContacts(newContactobj){
@@ -248,7 +214,9 @@ class Table extends Component{
 	}
 	changeTemplateState(){
 		this.setState({template: !this.state.template})
+		this.setState({templateDisabled: true});
 	}
+	
 	createTemplates(){
 		if(this.state.template){
 			const templateArr = this.state.templateData;
@@ -267,17 +235,20 @@ class Table extends Component{
 			let templateName = templateNames.map((templateNames,index)=>
 				<label key={index}>
 					<input type="radio" name="selection" onChange={this.radioChange} id={templateIds[index]} value={templateNames}/>
+					<span className="templateSpan">
 					{templateNames}<br/>
+					</span>
 				</label>	
 					)
 				//console.log(this.state.templateId);
 			return (
-				<div className="templateBlock">
+				<div className="templateBlock block">
 					<div className="template">
+						<p>Choose Template</p>
 						<form type="radio" name="selection" className="templateForm">
 							{templateName}
 						</form>
-						<button onClick={this.postData} className="tempSendButton" > Send </button>
+						<button onClick={this.postData} className="tempSendButton" disabled={this.state.templateDisabled}> Send </button>
 						<button onClick={this.changeTemplateState}> Cancel </button>
 					</div>
 				</div>
@@ -286,7 +257,8 @@ class Table extends Component{
 	}
 	radioChange(event){
 		if(event.target.checked === true){
-			this.setState({templateId:event.target.id})
+			this.setState({templateId:event.target.id});
+			this.setState({templateDisabled:false});
 		}
 		//console.log(event.target.checked);
 	}
@@ -299,23 +271,45 @@ class Table extends Component{
 			successMessage: "Folowing contacts is added to " + this.state.mailingListName}));	
 		this.changeMailingListShow();
 	}
+	changeMailingListDisable(event){
+		this.setState({
+			mailingListDisabled:false,
+			mailingListId:event.target.id,
+			mailingListName: event.target.dataset.name
+			
+		});
+		this.setState({});
+	}
 	addToMailingListRender(){
 		if(this.state.mailingListShow){
 			if(this.state.mailingLists.length > 0){
 				let mailingLists = this.state.mailingLists;
 				let choose = mailingLists.map((item,index)=>{
-					return <p onClick={this.changeMailingListDisable} data-name={item.EmailListName} key={index} id={item.EmailListID}>{item.EmailListName}</p>
-				})
+					{/*return <p onClick={this.changeMailingListDisable} data-name={item.EmailListName} key={index} id={item.EmailListID}>
+						{item.EmailListName}
+					</p>*/}
+				return(
+					<label key={index}>
+							<input type="radio" name="selection" data-name={item.EmailListName} onChange={this.changeMailingListDisable} id={item.EmailListID}/>
+							<span className="templateSpan">
+							{item.EmailListName}<br/>
+							</span>
+					</label>
+				)
+				
+			})
 				return (
-					<div className="subscribingContainer">
+					<div className="block">
 						<div className="subscribingMailigList">
-							<div className="mailingLIsts">
-								{choose}
-							</div>
-							<div className="clear"></div>
-							<div className="mailingListButtons">
-								<button onClick={this.addToMailingList} disabled={this.state.mailingListDisabled}> Add</button>
-								<button onClick={this.changeMailingListShow} className="btn_table"> Cancel</button>
+							<div className="existing_mailing_list">
+								<div className="mailingLIsts">
+									{choose}
+								</div>
+								<div className="clear"></div>
+								<div className="mailingListButtons">
+									<input type="button" defaultValue="Add" onClick={this.addToMailingList} disabled={this.state.mailingListDisabled}/>
+									<input type="button" defaultValue="Cancel" onClick={this.changeMailingListShow} className="btn_table"/>
+								</div>
 							</div>
 						</div>
 					</div>	
@@ -356,15 +350,7 @@ class Table extends Component{
 					</div>
 						{this.createTemplates()}
 					<div className="buttons">
-						<button  id="delete_button" onClick={this.changeDeleteState} 
-						disabled={this.state.disabled}> Delete</button>
-						{this.createDeletePopUp()}
-					</div>
-					<div className="buttons">
 						{this.createEmailListRender()}
-					</div>
-					<div className="buttons">
-						{this.uploadRender()}
 					</div>
 					<div className="buttons">
 						{this.addToMailingListRender()}
@@ -372,9 +358,25 @@ class Table extends Component{
 					<div className="buttons">
 						<AddContact data={this.state.data} getNewContacts={this.getNewContacts}/>
 					</div>
+					<div className="buttons">
+						<button id="upload_button">
+							<label htmlFor="file" onClick={this.uploadFile} className="upload_label" >
+								<input  ref="upload_input" type="file" className="inputfile" id="file"/>
+								<span>Upload file</span>
+							</label>
+						</button>
+					</div>
+					<form className="buttons">
+						<button  id="delete_button" onClick={this.changeDeleteState} 
+						disabled={this.state.disabled}>Delete Contact</button>
+						{this.createDeletePopUp()}
+					</form>
 					{this.state.successMessage && 
 						<Success changeSuccessMessage={this.changeSuccessMessage} addContactsFile={this.addContactsFile} file={this.state.file} message={this.state.successMessage}/>
+
 					}
+					{/*<p className="message">{this.state.createMailListMessage}</p>*/}
+					{this.state.requestLoad && <Loading/>}
 			</div>	
 		)
 	}

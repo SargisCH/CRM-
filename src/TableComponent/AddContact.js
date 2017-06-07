@@ -17,7 +17,7 @@ class AddContact extends Component{
         this.addNewContact = this.addNewContact.bind(this);
     }
     changeAddContact(){
-        this.setState({addContactBool: !this.state.addContactBool, emptyField: false, emailType:false, errorMessage:false})
+       this.setState({addContactBool: !this.state.addContactBool, emptyField: false, emailType:false, errorMessage:false})
     }
     errorMessageclose(){
         if(this.state.errorMessage === false){
@@ -55,6 +55,7 @@ class AddContact extends Component{
         });
 			}
 		}).then(response=>{
+            console.log(newData)
                 newData.push(response);
 			    this.props.getNewContacts(newData);
                 //this.setState({errorMessage:false})
@@ -79,31 +80,33 @@ class AddContact extends Component{
                 <button className="btn_table" onClick="target" onClick={this.changeAddContact}>Add contact</button>
             } else {
                     addView = 
-                    <div className="add_new_contact_form_container">
+                    <div className="add_new_contact_form_container block">
                         <div  className="add_new_contact_form" action="" >
-                            <label htmlFor="first_name"><br/>        
-                                <span>First name: </span> <input ref="first_name" id="first_name" type="text" required/>
-                            </label>
-                            <label htmlFor="last_name"><br/>             
-                                <span>Last name:</span> <input ref="last_name" id="last_name" type="text" required/>
-                            </label>
-                            <label htmlFor="company_name"><br/>                
-                                <span>Company name:</span> <input ref="company_name" id="company_name" type="text" required/>
-                            </label>
-                            <label htmlFor="position"><br/>                
-                                <span>Position:</span> <input ref="position" id="position" type="text" required/>
-                            </label>
-                            <label htmlFor="country"><br/>     
-                                <span>Country:</span> <input ref="country" id="country" type="text" required/>
-                            </label>
-                            <label htmlFor="email"><br/>
-                                <span>Email:</span> <input ref="email" id="email" type="email" required/>
-                            </label> <br/> 
-                            <button   className='btn_table'  onClick={this.addNewContact} id="add_button"  defaultValue="Add">Add</button> 
-                            <button onClick={this.changeAddContact}   className='btn_table' id="add_button"> Cancel </button>                          
-                            {this.state.errorMessage && <p className="error"> {this.state.errorMessage}</p>}
-                            {this.state.emptyField && <p className="error">{this.state.emptyField}</p>}
-                            {this.state.emailType && <p className="error">{this.state.emailType}</p>}
+                            <div className="add_contact_content">
+                                <label htmlFor="first_name">        
+                                    <span className="add_contact_value">First name: </span> <input className="add_input" ref="first_name" id="first_name" type="text" required/>
+                                </label><br/>
+                                <label htmlFor="last_name">             
+                                    <span className="add_contact_value">Last name:</span> <input className="add_input" ref="last_name" id="last_name" type="text" required/>
+                                </label><br/>
+                                <label htmlFor="company_name">              
+                                    <span className="add_contact_value">Company name:</span> <input className="add_input" ref="company_name" id="company_name" type="text" required/>
+                                </label><br/>  
+                                <label htmlFor="position">                
+                                    <span className="add_contact_value">Position:</span> <input className="add_input" ref="position" id="position" type="text" required/>
+                                </label><br/>
+                                <label htmlFor="country">     
+                                    <span className="add_contact_value">Country:</span> <input className="add_input" ref="country" id="country" type="text" required/>
+                                </label><br/>
+                                <label htmlFor="email">
+                                    <span className="add_contact_value">Email:</span> <input className="add_input" ref="email" id="email" type="email" required/>
+                                </label><br/>
+                                <input   className='btn_table' onClick={this.addNewContact}className="add_btn" id="add_submit" type="button" defaultValue="Add"/> 
+                                <input type="button" className="add_btn" defaultValue="Cancel" onClick={this.changeAddContact} id="add_cancel"/> 
+                            {this.state.errorMessage && <p className="error" id="12345"> {this.state.errorMessage}</p>}
+                            {this.state.emptyField && <p className="error" id="1234">{this.state.emptyField}</p>}
+                            {this.state.emailType && <p className="error " id="123">{this.state.emailType}</p>}                  
+                            </div>       
                         </div>
                     </div>
             }

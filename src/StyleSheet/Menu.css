@@ -1,11 +1,11 @@
 .menu{
     list-style-type: none;
-    width:20%;
-    background-color: #735a73;
+    width:15%;
+    background-color: #373741;
     overflow: hidden;
     display: inline-flex;
     justify-content:center;
-    height: 90%;
+    height: 100%;
     float:left;
 	position:fixed;
 	top:61px;
@@ -41,20 +41,28 @@
 	width:100%;
 	display:block;
 }
+
+.activeMenuIcon{
+    visibility: hidden !important;
+    display: block !important;
+    float: right !important;
+    font-size: 36px;
+}
 .menu_item:hover{
-    background-color:#907a94;
+    background-color: #202033;
+}
+.active i{
+    visibility: visible !important;
 }
 .active{
-    background-color:#513654;
+    background:  #202033;
 }
-
 @media (max-width:768px) {
     .menu.open{
         width: 25%;
         display: block;
     }
     .menu{
-        transition: 5s;
         display: none;
     }
 }
