@@ -6,6 +6,9 @@ class Success extends Component {
         this.changeSuccessMessage = this.changeSuccessMessage.bind(this)
     }
     changeSuccessMessage(){
+        if(this.props.file){
+            this.props.addContactsFile()   
+        }
         this.props.changeSuccessMessage(false)
     }
     render() {

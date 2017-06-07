@@ -25,7 +25,9 @@ class Table extends Component{
 			delete: false,
 			mailingListDisabled: true,
 			mailingListId:"",
-			mailingListName:""
+			mailingListName:"",
+			file: false,
+
 			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
@@ -47,7 +49,8 @@ class Table extends Component{
 		this.changeDeleteState = this.changeDeleteState.bind(this);
 		this.changeMailingListDisable = this.changeMailingListDisable.bind(this);
 		this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
-		this.uploadFile = this.uploadFile.bind(this)
+		this.uploadFile = this.uploadFile.bind(this);
+		this.addContactsFile = this.addContactsFile.bind(this)
 
 	}
 	componentDidMount(){
@@ -73,17 +76,19 @@ class Table extends Component{
 		this.setState({namingEmailList: !this.state.namingEmailList})
 	}
 	createEmailList(){
-		this.setState({namingEmailList: !this.state.namingEmailList})
-		let mailingLists = this.state.sendData;
-		let mailingList ={
-			EmailListName : this.refs.mailingListName.value,
-			contacts: mailingLists
-		}
-		let mailinglist  =this.state.mailingLists
- 
-		call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Your Mailing List is created '});
-			mailinglist.push(res);
-		})
+		if(this.refs.mailingListName.value !== ""){
+			this.setState({namingEmailList: !this.state.namingEmailList})
+			let mailingLists = this.state.sendData;
+			let mailingList ={
+				EmailListName : this.refs.mailingListName.value,
+				contacts: mailingLists
+			}
+			let mailinglist  =this.state.mailingLists
+	
+			call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Your Mailing List is created '});
+				mailinglist.push(res);
+			})
+		}	
 
 	}
 	createEmailListRender(){
@@ -105,7 +110,14 @@ class Table extends Component{
 	changeUpload(){
 		this.setState({upload: !this.state.upload})
 	}
-uploadFile(event){
+	addContactsFile(){
+		call('api/contacts','GET')
+			.then(response => {  response.error ? alert(response.message) : 
+				this.setState({data: response})})
+	}
+	uploadFile(event){
+		if(this.refs.upload_input.value !== ""){
+
 		event.preventDefault();
 		let data = new FormData();
     	let fileData = document.querySelector('input[type="file"]').files[0];
@@ -120,6 +132,7 @@ uploadFile(event){
 				return res.json()
 			}).then(res => {this.setState({successMessage: res})})
 			this.changeUpload();
+			this.setState({file:true})
 /*		fetch('http://crmbetc.azurewebsites.net/api/contacts/upload', {
         	method:'POST',
         	body:data   
@@ -128,6 +141,7 @@ uploadFile(event){
     	}).catch(function(e) {
         	console.log('Error',e);
     	}).then(res => console.log(res,this));*/
+		}
 }	
 	uploadRender(){
 		if(this.state.upload){
@@ -194,9 +208,10 @@ uploadFile(event){
 	changeDeleteState(){
 		this.setState({delete:!this.state.delete});
 	}
-	savedData(obj, id){
-		let savedData = this.state.data;
-		call('api/contacts','PUT', obj).then(response=>{savedData[id]=response;this.setState({data: savedData})});	
+	savedData(obj){
+		//let savedData = this.state.data;
+		this.setState({data:obj, successMessage: "New Contatcts is saved"})
+		//call('api/contacts','PUT', obj).then(response=>{savedData[id]=response;this.setState({data: savedData})});
 	}
 	postData(sendData){
 		sendData = this.state.sendData;
@@ -210,8 +225,26 @@ uploadFile(event){
 		this.changeTemplateState();
 	}	
 	getNewContacts(newContactobj){
-		let newData = this.state.data;
-		call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); this.setState({data:newData, successMessage:"New Contacts is added"})})
+/*		let newData = this.state.data;
+		//call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); console.log(response);this.setState({data:newData, successMessage:"New Contacts is added"})})
+		fetch('http://crmbetc.azurewebsites.net/api/contacts',{
+			method: "POST",
+			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    		body : JSON.stringify(newContactobj),
+		}).then(res =>{
+			if(res.ok){
+				return res.json()
+			}
+			else{
+				      return res.json()
+        .then(function(res) {
+          throw new Error( res.Message);
+        });
+			}
+		}).then(response=>{newData.push(response);
+			this.setState({data:newData, successMessage:"New Contacts is added"})})
+			.catch(error => {this.setState({errorMessage:error.message, errorMessageRender: true})});*/
+			this.setState({data:newContactobj, successMessage:"New Contacts is added"})
 	}
 	changeTemplateState(){
 		this.setState({template: !this.state.template})
@@ -266,12 +299,6 @@ uploadFile(event){
 			successMessage: "Folowing contacts is added to " + this.state.mailingListName}));	
 		this.changeMailingListShow();
 	}
-/*	changeMailingListDisable(event){
-		this.setState({mailingListDisabled:false});
-		this.setState({mailingListId:event.target.id})
-
-	}*/
-
 	addToMailingListRender(){
 		if(this.state.mailingListShow){
 			if(this.state.mailingLists.length > 0){
@@ -343,12 +370,11 @@ uploadFile(event){
 						{this.addToMailingListRender()}
 					</div>
 					<div className="buttons">
-						<AddContact getNewContacts={this.getNewContacts}/>
+						<AddContact data={this.state.data} getNewContacts={this.getNewContacts}/>
 					</div>
 					{this.state.successMessage && 
-						<Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>
+						<Success changeSuccessMessage={this.changeSuccessMessage} addContactsFile={this.addContactsFile} file={this.state.file} message={this.state.successMessage}/>
 					}
-					{/*<p className="message">{this.state.createMailListMessage}</p>*/}
 			</div>	
 		)
 	}

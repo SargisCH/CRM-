@@ -5,20 +5,32 @@ import '../StyleSheet/Table.css';
 class AddContact extends Component{
     constructor(props){
         super(props);
-        this.state = {addContactBool: false, addContacts:""}
+        this.state = {
+            addContactBool: false, 
+            addContacts:"",
+            errorMessage: false,
+			errorMessageRender: false,
+            emptyField: false,
+            emailType: false
+        }
         this.changeAddContact = this.changeAddContact.bind(this);
         this.addNewContact = this.addNewContact.bind(this);
     }
     changeAddContact(){
-        this.setState({addContactBool: !this.state.addContactBool})
+        this.setState({addContactBool: !this.state.addContactBool, emptyField: false, emailType:false, errorMessage:false})
     }
-    addNewContact(event){
-        
+    errorMessageclose(){
+        if(this.state.errorMessage === false){
+            this.setState({addContactBool: !this.state.addContactBool})
+        }
+    }
+    addNewContact(){
+        let emailTypeCheck = /\S+@\S+\.\S+/;
         let arrayCheckRefs = [];
         for(let i in this.refs){
             arrayCheckRefs.push(this.refs[i].value)
         }
-        if(arrayCheckRefs.every(elem => elem !== "" )){
+        if(arrayCheckRefs.every(elem => elem !== "" && emailTypeCheck.test(this.refs.email.value) )){
             let contactsObj = {
                 FullName: this.refs.first_name.value + " " +  this.refs.last_name.value,
                 CompanyName: this.refs.company_name.value,
@@ -26,9 +38,38 @@ class AddContact extends Component{
                 Country: this.refs.country.value,
                 Email: this.refs.email.value,
             };
-            setTimeout(()=>this.setState({addContactBool: !this.state.addContactBool}),100)
-            this.props.getNewContacts(contactsObj);    
-            event.preventDefault;
+            let newData = this.props.data;
+		//call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); console.log(response);this.setState({data:newData, successMessage:"New Contacts is added"})})
+		fetch('http://crmbetc.azurewebsites.net/api/contacts',{
+			method: "POST",
+			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    		body : JSON.stringify(contactsObj),
+		}).then(res =>{
+			if(res.ok){
+				return res.json()
+			}
+			else{
+				      return res.json()
+        .then(function(res) {
+          throw new Error( res.Message);
+        });
+			}
+		}).then(response=>{
+                newData.push(response);
+			    this.props.getNewContacts(newData);
+                //this.setState({errorMessage:false})
+                //this.errorMessageclose();
+                //this.changeAddContact();
+                this.setState({addContactBool: !this.state.addContactBool})
+            })
+			.catch(error => {this.setState({errorMessage:error.message});this.errorMessageclose()});
+            this.setState({emptyField: false, emailType:false})
+        } else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email.value) ){
+            this.setState({emptyField: ""})
+            this.setState({emailType: "Please Enter Correct Email"}) 
+        }else{
+           this.setState({emptyField: "Empty Field"}) 
+           this.setState({emailType: ""}) 
         }
     }
     render(){
@@ -39,7 +80,7 @@ class AddContact extends Component{
             } else {
                     addView = 
                     <div className="add_new_contact_form_container">
-                        <form  className="add_new_contact_form" action="" onSubmit={this.addNewContact}>
+                        <div  className="add_new_contact_form" action="" >
                             <label htmlFor="first_name"><br/>        
                                 <span>First name: </span> <input ref="first_name" id="first_name" type="text" required/>
                             </label>
@@ -58,9 +99,12 @@ class AddContact extends Component{
                             <label htmlFor="email"><br/>
                                 <span>Email:</span> <input ref="email" id="email" type="email" required/>
                             </label> <br/> 
-                            <input   className='btn_table' id="add_button" type="submit" defaultValue="Add"/> 
+                            <button   className='btn_table'  onClick={this.addNewContact} id="add_button"  defaultValue="Add">Add</button> 
                             <button onClick={this.changeAddContact}   className='btn_table' id="add_button"> Cancel </button>                          
-                        </form>
+                            {this.state.errorMessage && <p className="error"> {this.state.errorMessage}</p>}
+                            {this.state.emptyField && <p className="error">{this.state.emptyField}</p>}
+                            {this.state.emailType && <p className="error">{this.state.emailType}</p>}
+                        </div>
                     </div>
             }
             return(

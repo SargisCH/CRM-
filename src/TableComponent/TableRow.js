@@ -11,7 +11,10 @@ class TableRow extends Component{
 				editRowIndex:"",
 				sendArray : this.props.dataArray,
 				id:[],
-				checkBoxes:[]
+				checkBoxes:[],
+				emptyField: false,
+            	emailType: false,
+				errorMessage: false
 		}
 		this.checkBoxChange = this.checkBoxChange.bind(this);
 		this.changeEditMode =this.changeEditMode.bind(this);
@@ -37,21 +40,54 @@ class TableRow extends Component{
 			this.props.deleteCheckBoxes(this.state.checkBoxes)
 		 }
 		 save(){
-			let savedData= {
-				FullName: this.refs.first_name_edit.value + " " + this.refs.last_name_edit.value,
-				CompanyName: this.refs.company_name_edit.value,
-				Position: this.refs.position_edit.value,
-				Country: this.refs.country_edit.value,
-				Email: this.refs.email_edit.value,
-				GuID: this.state.savedGuId
+			let data = this.props.dataArray;
+			let emailTypeCheck = /\S+@\S+\.\S+/;
+        	let arrayCheckRefs = [];
+        	for(let i in this.refs){
+            	arrayCheckRefs.push(this.refs[i].value)
+        	}
+			if(arrayCheckRefs.every(elem => elem !== "" && emailTypeCheck.test(this.refs.email_edit.value) )){
+				let savedData= {
+					FullName: this.refs.first_name_edit.value + " " + this.refs.last_name_edit.value,
+					CompanyName: this.refs.company_name_edit.value,
+					Position: this.refs.position_edit.value,
+					Country: this.refs.country_edit.value,
+					Email: this.refs.email_edit.value,
+					GuID: this.state.savedGuId
 
-			} ;
-			this.props.savedData(savedData, this.state.savedId);
-			this.setState({editMode: !this.state.editMode});
+				} ;
+			fetch('http://crmbetc.azurewebsites.net/api/contacts',{
+				method: "PUT",
+				headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify(savedData),
+			}).then(res =>{
+			if(res.ok){
+				return res.json()
+			}
+			else{
+				return res.json()
+        		.then(function(res) {
+          			throw new Error( res.Message);
+        		});
+			}
+		}).then(response=>{
+				data[this.state.savedId]= response;
+				this.props.savedData(data);
+				this.setState({editMode: !this.state.editMode, errorMessage:false});
+            })
+			.catch(error => {this.setState({errorMessage:error.message})});
+				//this.setState({editMode: !this.state.editMode});
+			}else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email_edit.value) ){
+				this.setState({emptyField: ""})
+				this.setState({emailType: "Please Enter Correct Email"}) 
+        	}else{
+				this.setState({emptyField: "Empty Field"}) 
+				this.setState({emailType: ""}) 
+        	}
 		}
 
 		 changeEditMode(){
-			 this.setState({editMode: !this.state.editMode});
+			 this.setState({editMode: !this.state.editMode, errorMessage:false});
 			 
 		 }
 		 editOnClicks(event){
@@ -73,7 +109,7 @@ class TableRow extends Component{
 				 return (
 					 <div className="edit_block">
 						<div className="edit_form_block">
-							<form  className="edit_form" action="" onSubmit={this.save}>
+							<div  className="edit_form" >
 								<label htmlFor="first_name_edit"><br/>        
 									<span>First name: </span> <input ref="first_name_edit" defaultValue={firstName} id="first_name_edit" type="text" required/>
 								</label>
@@ -92,9 +128,12 @@ class TableRow extends Component{
 								<label htmlFor="email_edit"><br/>
 									<span>Email:</span> <input ref="email_edit" defaultValue={placeholders['Email']} id="email_edit" type="email" required/>
 								</label> <br/> 
-								<input type="Submit" defaultValue="Save"/>
+								<button onClick={this.save} > Save </button>
 								<button onClick={this.changeEditMode}>Cancel</button>
-							</form>
+								{this.state.errorMessage && <p className="error">{this.state.errorMessage}</p>}
+								{this.state.emptyField && <p className="error">{this.state.emptyField}</p>}
+                            	{this.state.emailType && <p className="error">{this.state.emailType}</p>}
+							</div>
 						</div>
 					 </div>
 				 )
