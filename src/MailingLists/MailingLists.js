@@ -50,7 +50,7 @@ class MailingLists extends Component {
         })})
     }
     send(templateId, emailListId){
-        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST').then(()=>this.setState({successMessage: "template sent"}));
+        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST').then(()=>this.setState({successMessage: "Email has been sent successfully"}));
     }
     SendEmail(sendData){
 		this.setState({sendData :sendData});

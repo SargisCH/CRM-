@@ -64,12 +64,19 @@
         width: 20%;
         display: block;
     }
+    .menu_item a{
+        font-size: 0.9em;
+    }
     .menu{
         display: none;
     }
 }
-/*@media (max-width:450px) {
-    .menu.open{
-        width: 50%;
+@media (max-width:900px) {
+    .menu_item a{
+        font-size: 0.95em;
+        padding-left: 4%;
     }
-}*/
+    .activeMenuIcon{
+        font-size: 30px;
+    }
+}

@@ -65,15 +65,33 @@ class ChooseMailingList extends Component {
      }
      sendRender(){
          if(this.state.sendView){
-            let templateData = this.props.templateData;
-            let templates = templateData.map((item, index)=>{
-                return <p key={index}> <input onClick={this.catchTemplateId} name="template" id={item.TemplateId} type="radio" />{item.TemplateName}</p>
-            });
+            const templateData = this.props.templateData;
+			let templateNames = [];
+			let templateIds = [];
+			for(let i of templateData){
+				templateNames.push(i.TemplateName)
+				templateIds.push(i.TemplateId)
+			}
+			for(let j = 0; j < templateNames.length; j++){
+				templateNames[j] = templateNames[j].slice(0,-5);
+				templateNames[j] = templateNames[j].split(/(?=[A-Z])/).join(" ");
+            }
+            let templates = templateNames.map((templateNames, index)=>
+                <label key={index}> 
+                    <input onClick={this.catchTemplateId} name="template" id={templateIds[index]} type="radio" value={templateNames}/>
+                    <span className="templateSpan">
+					    {templateNames} <br/>
+				    </span>
+                </label>
+            )
+            // console.log(templateNames);
             return (
             <div className="templateBlock block">
 				<div className="template">
 					<p className="popup_p">Choose Template</p>
-                    {templates}
+                      <form type="radio" name="selection" className="templateForm">
+							{templates}
+                        </form>
                     <button onClick={this.send}>Send</button>
                     <button onClick={this.changeSendView}>Cancel</button>
                 </div>
@@ -115,3 +133,4 @@ class ChooseMailingList extends Component {
 export default ChooseMailingList;
 
 
+                

@@ -65,6 +65,22 @@
 .deleteContactsBlock{
     margin-top: 5px;
 }
+.deleteContactsBlock .btn_table{
+    float: right;
+    outline: none;
+	transition: 2s;
+    color: #fff;
+    background-color: #1A1F25;
+    border-radius: .1rem;
+	border: 0;
+	cursor:pointer;
+	width: 80px;
+	margin: 1%;
+	padding: 1%;
+}
+.deleteContactsBlock .btn_table:hover{
+     background-color: rgb(40, 47, 71); 
+}
 .mailingListName{
     /*width:100%;*/
     max-width: 100px;

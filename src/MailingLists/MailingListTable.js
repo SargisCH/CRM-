@@ -61,7 +61,7 @@
 						<tr>
 							<th></th>
 							<th>Full Name</th>
-							<th> Companty Name</th>
+							<th>Company Name</th>
 							<th>Position</th>
 							<th>Country</th>
 							<th>Email</th>

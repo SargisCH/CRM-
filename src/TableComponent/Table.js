@@ -252,12 +252,12 @@ class Table extends Component{
 			}
 				// console.log(templateNames)
 			let templateName = templateNames.map((templateNames,index)=>
-				<label key={index}>
-					<input type="radio" name="selection" onChange={this.radioChange} id={templateIds[index]} value={templateNames}/>
-					<span className="templateSpan">
-					{templateNames}<br/>
-					</span>
-				</label>	
+					<label key={index}>
+						<input type="radio" name="selection" onChange={this.radioChange} id={templateIds[index]} value={templateNames}/>
+						<span className="templateSpan">
+						{templateNames}<br/>
+						</span>
+					</label>
 					)
 				//console.log(this.state.templateId);
 			return (
