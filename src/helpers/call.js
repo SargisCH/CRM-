@@ -1,4 +1,4 @@
-export default  function call(uri, method, body = false,  error_message = "Something went wrong"){
+export default  function call(uri, method, body = false,  error_message = "Looks Like there is a problem"){
   if(body !== false && method!=="GET" /*&& method!=="DELETE"*/){
     body = JSON.stringify(body);
   }
@@ -11,7 +11,6 @@ export default  function call(uri, method, body = false,  error_message = "Somet
     if (!response.ok) {
       return {error: true, message: error_message};
     }
-    console.log("response")
     return response;
   })
   .then(response => response.json())

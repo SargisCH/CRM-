@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-//import TableHeader from'./TableHeader.js';
-//import TableRow from './TableRow.js';
+import Loading from "../Loading.js"
 import '../StyleSheet/Table.css';
 class AddContact extends Component{
     constructor(props){
@@ -11,7 +10,8 @@ class AddContact extends Component{
             errorMessage: false,
 			errorMessageRender: false,
             emptyField: false,
-            emailType: false
+            emailType: false,
+            requestLoad: false
         }
         this.changeAddContact = this.changeAddContact.bind(this);
         this.addNewContact = this.addNewContact.bind(this);
@@ -39,7 +39,7 @@ class AddContact extends Component{
                 Email: this.refs.email.value,
             };
             let newData = this.props.data;
-		//call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); console.log(response);this.setState({data:newData, successMessage:"New Contacts is added"})})
+            this.setState({requestLoad: true})
 		fetch('http://crmbetc.azurewebsites.net/api/contacts',{
 			method: "POST",
 			headers: {'Accept': 'application/json','Content-Type': "application/json"},
@@ -55,29 +55,27 @@ class AddContact extends Component{
         });
 			}
 		}).then(response=>{
-            console.log(newData)
                 newData.push(response);
 			    this.props.getNewContacts(newData);
-                //this.setState({errorMessage:false})
-                //this.errorMessageclose();
-                //this.changeAddContact();
-                this.setState({addContactBool: !this.state.addContactBool})
+                this.setState({addContactBool: !this.state.addContactBool, /*requestLoad:false*/})
             })
 			.catch(error => {this.setState({errorMessage:error.message});this.errorMessageclose()});
-            this.setState({emptyField: false, emailType:false})
+            this.setState({emptyField: false, emailType:false, requestLoad:false})
         } else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email.value) ){
             this.setState({emptyField: ""})
             this.setState({emailType: "Please Enter Correct Email"}) 
+            this.setState({errorMessage:false})
         }else{
            this.setState({emptyField: "Empty Field"}) 
            this.setState({emailType: ""}) 
+           this.setState({errorMessage:false})
         }
     }
     render(){
         let addView;
         if(this.state.addContactBool === false){
             addView =
-                <button className="btn_table" onClick="target" onClick={this.changeAddContact}>Add New Contact</button>
+                <button className="btn_table"  onClick={this.changeAddContact}>Add New Contact</button>
             } else {
                     addView = 
                     <div className="add_new_contact_form_container block">
@@ -101,17 +99,23 @@ class AddContact extends Component{
                                 <label htmlFor="email">
                                     <span className="add_contact_value">Email:</span> <input className="add_input" ref="email" id="email" type="email" required/>
                                 </label><br/>
-                                <input   className='btn_table' onClick={this.addNewContact}className="add_btn" id="add_submit" type="button" defaultValue="Add"/> 
+                                <input   className='btn_table add_btn' onClick={this.addNewContact} id="add_submit" type="button" defaultValue="Add"/> 
                                 <input type="button" className="add_btn" defaultValue="Cancel" onClick={this.changeAddContact} id="add_cancel"/> 
                             {this.state.errorMessage && <p className="error" id="12345"> {this.state.errorMessage}</p>}
                             {this.state.emptyField && <p className="error" id="1234">{this.state.emptyField}</p>}
-                            {this.state.emailType && <p className="error " id="123">{this.state.emailType}</p>}                  
+                            {this.state.emailType && <p className="error " id="123">{this.state.emailType}</p>}      
+                                                {this.state.requestLoad && <div id="loading">
+                    console.log("dsadas")
+							<Loading/>
+                    </div>}            
                             </div>       
                         </div>
                     </div>
             }
             return(
-                <div className="add_contact_container">{addView}</div>
+                <div className="add_contact_container">{addView}
+
+                </div>
             )
     }
 }

@@ -25,11 +25,10 @@ class Table extends Component{
 			delete: false,
 			mailingListDisabled: true,
 			mailingListId:"",
-			mailingListName:"",
+			mailingListName: false,
 			templateDisabled:true,
 			file: false,
 			requestLoad: false
-			/*deleteData:""*/
 		}
 		this.postData = this.postData.bind(this);
 		this.getSendData = this.getSendData.bind(this);
@@ -55,9 +54,9 @@ class Table extends Component{
 	}
 	componentDidMount(){
 		let self = this;
+        this.setState({requestLoad:true})
 		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : 
-				self.setState({data: response})});
-
+				self.setState({data: response,requestLoad:false})});
 		call('api/templates','GET')
 		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})});
 		call('api/emaillists','GET')
@@ -69,6 +68,7 @@ class Table extends Component{
 	}
 	createEmailList(){
 		if(this.refs.mailingListName.value !== ""){
+		this.setState({requestLoad:true})
 			this.setState({namingEmailList: !this.state.namingEmailList})
 			let mailingLists = this.state.sendData;
 			let mailingList ={
@@ -77,7 +77,7 @@ class Table extends Component{
 			}
 			let mailinglist  =this.state.mailingLists
  
-			call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Mailing List has been created '});
+			call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Mailing List has been created', requestLoad:false});
 				mailinglist.push(res);
 			})
 		}
@@ -104,9 +104,10 @@ class Table extends Component{
 		this.setState({upload: !this.state.upload})
 	}
 	addContactsFile(){
+		this.setState({requestLoad:true})
 		call('api/contacts','GET')
 			.then(response => {  response.error ? alert(response.message) : 
-				this.setState({data: response})})
+				this.setState({data: response, requestLoad:false})})
 	}
 	uploadRender(){
 		if(this.state.upload){
@@ -129,7 +130,7 @@ class Table extends Component{
 	}
 	uploadFile(event){
 		if(this.refs.upload_input.value !== "") {
-		// this.setState({requestLoad:true})
+		this.setState({requestLoad:true})
 		event.preventDefault();
 		let data = new FormData();
     	let fileData = document.querySelector('input[type="file"]').files[0];
@@ -140,14 +141,13 @@ class Table extends Component{
 				"Accept": "application/json",
 				body: data
 			}).then(function (res) {
-				console.log(res)
 				return res.json()
 			}).then(res => {this.setState({successMessage: res})})
 			this.changeUpload();
 			this.setState({file:true})
 		}
 		this.setState({requestLoad:false})
-	}	
+	}		
 	getSendData(sendData){
 		this.setState({sendData :sendData});
 	}
@@ -163,6 +163,7 @@ class Table extends Component{
 		this.setState({checkBoxes:checkBoxes})
 	}
 	deleteContacts(sendDeleteData){
+		this.setState({requestLoad: true})
 		 sendDeleteData = this.state.sendData;
 		 let deleteData = this.state.data;
 		 for(let i in sendDeleteData){
@@ -173,12 +174,16 @@ class Table extends Component{
 			 }
 		 }
 		 this.setState({data:deleteData})
-		 call('api/contacts','DELETE', sendDeleteData).then(()=>{this.setState({successMessage: "Contacts is deleted"}); console.log("delete")});
-		 		let checkBoxes = this.state.checkBoxes;
+		 this.setState({requestLoad: true})
+		 call('api/contacts','DELETE', sendDeleteData).then(()=>{
+			 this.setState({successMessage: "Contacts is deleted"}); 
+			 this.refs.rows.resetDelete();
+			});
+		let checkBoxes = this.state.checkBoxes;
 		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
 		}
-		this.setState({checkBoxes: checkBoxes});
+		this.setState({checkBoxes: checkBoxes, requestLoad: false});
 		this.setState({disabled:true});
 		this.changeDeleteState();
 	}
@@ -199,37 +204,16 @@ class Table extends Component{
 		this.setState({delete:!this.state.delete});
 	}
 	savedData(obj){
-		//let savedData = this.state.data;
 		this.setState({data:obj, successMessage: "New Contatcts is saved"})
-		//call('api/contacts','PUT', obj).then(response=>{savedData[id]=response;this.setState({data: savedData})});
 	}
 	postData(sendData){
+		this.setState({requestLoad: true})
 		sendData = this.state.sendData;
-		call('api/sendemails?template='+this.state.templateId,'POST', sendData).then(()=>this.setState({successMessage: "Email has been sent successfully"}));
-		let checkBoxes = this.state.checkBoxes;
+		call('api/sendemails?template='+this.state.templateId,'POST', sendData).then(()=>this.setState({successMessage: "Email has been sent successfully", requestLoad:false}));
 		this.changeTemplateState();
 	}	
 	getNewContacts(newContactobj){
-/*		let newData = this.state.data;
-		//call('api/contacts','POST', newContactobj).then(response=>{newData.push(response); console.log(response);this.setState({data:newData, successMessage:"New Contacts is added"})})
-		fetch('http://crmbetc.azurewebsites.net/api/contacts',{
-			method: "POST",
-			headers: {'Accept': 'application/json','Content-Type': "application/json"},
-    		body : JSON.stringify(newContactobj),
-		}).then(res =>{
-			if(res.ok){
-				return res.json()
-			}
-			else{
-				      return res.json()
-        .then(function(res) {
-          throw new Error( res.Message);
-        });
-			}
-		}).then(response=>{newData.push(response);
-			this.setState({data:newData, successMessage:"New Contacts is added"})})
-			.catch(error => {this.setState({errorMessage:error.message, errorMessageRender: true})});*/
-			this.setState({data:newContactobj, successMessage:"New Contacts is added"})
+		this.setState({data:newContactobj, successMessage:"New Contacts is added"})
 	}
 	changeTemplateState(){
 		this.setState({template: !this.state.template})
@@ -250,7 +234,6 @@ class Table extends Component{
 				templateNames[j] = templateNames[j].split(/(?=[A-Z])/).join(" ");
 
 			}
-				// console.log(templateNames)
 			let templateName = templateNames.map((templateNames,index)=>
 					<label key={index}>
 						<input type="radio" name="selection" onChange={this.radioChange} id={templateIds[index]} value={templateNames}/>
@@ -259,7 +242,6 @@ class Table extends Component{
 						</span>
 					</label>
 					)
-				//console.log(this.state.templateId);
 			return (
 				<div className="templateBlock block">
 					<div className="template">
@@ -279,16 +261,18 @@ class Table extends Component{
 			this.setState({templateId:event.target.id});
 			this.setState({templateDisabled:false});
 		}
-		//console.log(event.target.checked);
 	}
 	changeMailingListShow(){
 		this.setState({mailingListShow: !this.state.mailingListShow})
 	}
 	addToMailingList(){
-		let id = this.state.mailingListId;
-		call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(this.setState({
-			successMessage: "Folowing contacts is added to " + this.state.mailingListName}));	
-		this.changeMailingListShow();
+		if(this.state.mailingListName){
+			this.setState({requestLoad:true})
+			let id = this.state.mailingListId;
+			call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(this.setState({
+				successMessage: "Folowing contacts is added to " + this.state.mailingListName, mailingListName: false, requestLoad:false  }));	
+			this.changeMailingListShow();
+		}
 	}
 	changeMailingListDisable(event){
 		this.setState({
@@ -304,9 +288,6 @@ class Table extends Component{
 			if(this.state.mailingLists.length > 0){
 				let mailingLists = this.state.mailingLists;
 				let choose = mailingLists.map((item,index)=>{
-					{/*return <p onClick={this.changeMailingListDisable} data-name={item.EmailListName} key={index} id={item.EmailListID}>
-						{item.EmailListName}
-					</p>*/}
 				return(
 					<label key={index}>
 							<input type="radio" name="selection" data-name={item.EmailListName} onChange={this.changeMailingListDisable} id={item.EmailListID}/>
@@ -325,7 +306,6 @@ class Table extends Component{
 									<p className="popup_p">Exicting Mailing Lists</p>
 									{choose}
 								</div>
-								{/*<div className="clear"></div>*/}
 								<div className="mailingListButtons">
 									<input type="button" defaultValue="Add" onClick={this.addToMailingList} disabled={this.state.mailingListDisabled} className="ex_mailinglist_btn"/>
 									<input type="button" defaultValue="Cancel" onClick={this.changeMailingListShow} className="ex_mailinglist_btn"/>
@@ -341,26 +321,16 @@ class Table extends Component{
 			return <button disabled={this.state.disabled} onClick={this.changeMailingListShow} className="btn_table addToEmailList" >Add to Existing List</button>
 		}
 	}
-	loading(){
-		if(this.state.data.length < 1){
-			return(  <div id="loading"> 
-			<Loading/>
-			</div>
-			)
-		}
-	}
 	changeSuccessMessage(message){
 		this.setState({successMessage: message})
 	}
 	render(){
 		return (
-			
 			<div className='TableContainer'>
-					{this.loading()}
 					<div className="UserTable">
 						<table className="table" id="scroll">
 						<TableHeader headerdata={this.state.data[0]} className="tableheader"/>
-						<TableRow  savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} 
+						<TableRow  ref="rows" savedData={this.savedData} isDisable={this.isDisable} getSendData={this.getSendData} 
 						deleteCheckBoxes={this.deleteCheckBoxes} deleteData={this.deleteData} sendArray={[]} update={this.updateTable} dataArray={this.state.data}/>
 						</table>
 					</div> 
@@ -390,8 +360,9 @@ class Table extends Component{
 						<Success changeSuccessMessage={this.changeSuccessMessage} addContactsFile={this.addContactsFile} file={this.state.file} message={this.state.successMessage}/>
 
 					}
-					{/*<p className="message">{this.state.createMailListMessage}</p>*/}
-					{this.state.requestLoad && <Loading/>}
+					{this.state.requestLoad && <div id="loading">
+							<Loading/>
+                    </div>}
 			</div>	
 		)
 	}

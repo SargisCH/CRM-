@@ -15,7 +15,9 @@ class MailingLists extends Component {
             sendData:[],
             emailListId: 0,
             disabled:true,
-            successMessage:false
+            successMessage:false,
+            checkBoxes: [],
+            requestLoad: false
          };
          this.getDefaultEmailLists =this.getDefaultEmailLists.bind(this);
          this.getEmailListById = this.getEmailListById.bind(this);
@@ -23,7 +25,8 @@ class MailingLists extends Component {
          this.send = this.send.bind(this);
          this.deleteContacts = this.deleteContacts.bind(this);
          this.getSendData = this.getSendData.bind(this);
-         this.changeSuccessMessage = this.changeSuccessMessage.bind(this)
+         this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
+         this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this)
     }
 
     componentDidMount(){
@@ -32,7 +35,7 @@ class MailingLists extends Component {
         call('api/templates','GET')
 		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})}); 
     }
-         changeSuccessMessage(message){
+    changeSuccessMessage(message){
          this.setState({successMessage: message})
      }
     getDefaultEmailLists(tableContent, mailingListName, emailListId){
@@ -45,16 +48,20 @@ class MailingLists extends Component {
     }
     deleteEmailList(id,index){
         let updatedEmailLists = this.state.emailLists;
-        call('api/emaillists?id='+ id, 'DELETE').then(res=>{updatedEmailLists.splice(index,1); this.setState({
-            emailLists: updatedEmailLists,successMessage: "Mailing List is deleted"
+        this.setState({requestLoad:true})
+       call('api/emaillists?id='+ id, 'DELETE').then(res=>{updatedEmailLists.splice(index,1); this.setState({
+            emailLists: updatedEmailLists,successMessage: "Mailing List is deleted", requestLoad: false
         })})
     }
+    deleteCheckBoxes(checkBoxes){
+        this.setState({checkBoxes: checkBoxes})
+    }
     send(templateId, emailListId){
-        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST').then(()=>this.setState({successMessage: "Email has been sent successfully"}));
+        this.setState({requestLoad:true})
+        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST').then(()=>this.setState({successMessage: "Email has been sent successfully", requestLoad:false}));  
     }
     SendEmail(sendData){
 		this.setState({sendData :sendData});
-
 	}
     getSendData(sendData){
         if(sendData.length > 0){
@@ -76,10 +83,14 @@ class MailingLists extends Component {
 				 }
 			 }
 		 }
-         
-		 call('api/emaillists/update?id='+id+'&flag=false','PUT', sendDeleteData).then(res=>this.setState({
-             tableContent: deleteData, successMessage: "Folowing Contacts is deleted"}));
-		
+        let checkBoxes = this.state.checkBoxes;
+		for(let i in checkBoxes){
+			checkBoxes[i].checked = false
+		}
+        this.setState({requestLoad: true})
+		 call('api/emaillists/update?id='+id+'&flag=false','PUT', sendDeleteData).then(res=>{this.setState({
+             tableContent: deleteData, successMessage: "Folowing Contacts is deleted", requestLoad:false});this.refs.resetGuids.resetDelete()}); 
+             this.setState({disabled:true});
 	}
     render() {
         return (
@@ -88,13 +99,15 @@ class MailingLists extends Component {
                 emailLists={this.state.emailLists}  deleteEmailList={this.deleteEmailList} 
                 templateData={this.state.templateData} send={this.send} getEmailListById={this.getEmailListById}/> }
                 <div className="mailingListTableContainer">
-                    {this.state.tableContent  !== null ? <MailingListTable  
-                    tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/>: <Loading/> }
+                    {this.state.tableContent  !== null ? <MailingListTable  deleteCheckBoxes={this.deleteCheckBoxes} ref="resetGuids"
+                    tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/>: 
+                    <div id="loading"><Loading/></div> }
                     <div className="deleteContactsBlock">
                         <button disabled={this.state.disabled} onClick={this.deleteContacts} className="btn_table"> Delete</button>
                     </div>
                 </div>    
                   {this.state.successMessage && <Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>}
+                  {this.state.requestLoad && <div id="loading"> <Loading/> </div>}
             </div>
         )
 

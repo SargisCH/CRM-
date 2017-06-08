@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Loading from '../Loading.js'
 
 class TableRow extends Component{
 	constructor(props){
@@ -14,7 +15,8 @@ class TableRow extends Component{
 				checkBoxes:[],
 				emptyField: false,
             	emailType: false,
-				errorMessage: false
+				errorMessage: false,
+                requestLoad: false
 		}
 		this.checkBoxChange = this.checkBoxChange.bind(this);
 		this.changeEditMode =this.changeEditMode.bind(this);
@@ -39,6 +41,9 @@ class TableRow extends Component{
 			this.props.isDisable(sendArray);
 			this.props.deleteCheckBoxes(this.state.checkBoxes)
 		 }
+         resetDelete(){
+			 this.setState({sendArray: []})
+		 }
 		 save(){
 			let data = this.props.dataArray;
 			let emailTypeCheck = /\S+@\S+\.\S+/;
@@ -56,6 +61,7 @@ class TableRow extends Component{
 					GuID: this.state.savedGuId
 
 				} ;
+            this.setState({requestLoad: true})
 			fetch('http://crmbetc.azurewebsites.net/api/contacts',{
 				method: "PUT",
 				headers: {'Accept': 'application/json','Content-Type': "application/json"},
@@ -73,21 +79,23 @@ class TableRow extends Component{
 		}).then(response=>{
 				data[this.state.savedId]= response;
 				this.props.savedData(data);
-				this.setState({editMode: !this.state.editMode, errorMessage:false});
+				this.setState({editMode: !this.state.editMode, errorMessage:false, requestLoad: false, emptyField: "",emailType: ""});
             })
-			.catch(error => {this.setState({errorMessage:error.message})});
 				//this.setState({editMode: !this.state.editMode});
 			}else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email_edit.value) ){
-				this.setState({emptyField: ""})
-				this.setState({emailType: "Please Enter Correct Email"}) 
+				this.setState({requestLoad: false, emptyField: ""})
+			.catch(error => {this.setState({errorMessage:error.message, requestLoad: false, emptyField: "", emailType: ""})});
+				this.setState({emailType: "Please Enter Correct Email"});
+				this.setState({errorMessage:false})
         	}else{
-				this.setState({emptyField: "Empty Field"}) 
-				this.setState({emailType: ""}) 
+				this.setState({requestLoad: false, emptyField: "Empty Field"}) 
+				this.setState({emailType: ""}) ;
+				this.setState({errorMessage:false})
         	}
 		}
 
 		 changeEditMode(){
-			 this.setState({editMode: !this.state.editMode, errorMessage:false});
+			 this.setState({editMode: !this.state.editMode, errorMessage:false, emailType: "", emptyField: ""});
 			 
 		 }
 		 editOnClicks(event){
@@ -135,6 +143,7 @@ class TableRow extends Component{
                             	{this.state.emailType && <p className="error">{this.state.emailType}</p>}
 							</div>
 						</div>
+                        {this.state.requestLoad && <div id="loading"><Loading/></div>}
 					 </div>
 				 )
 			 }else{

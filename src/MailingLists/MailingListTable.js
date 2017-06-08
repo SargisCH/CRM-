@@ -6,13 +6,15 @@
          super(props);
          this.state = {
 			 sendArray:[],
-			 deleteContacts : []
+			 deleteContacts : [],
+			 checkBoxes: []
 	 	};
 		this.checkBoxChange = this.checkBoxChange.bind(this);
      }
 	 checkBoxChange(event){
 	 		let index = event.target.id;
 	 		let sendArray = this.state.sendArray;
+			 this.state.checkBoxes.push(event.target);
 	 		if(event.target.checked === true){
 	 			sendArray.push(this.props.tableContent[index].GuID);
 	 			this.setState({sendArray: sendArray});
@@ -20,17 +22,16 @@
 	 			for(let i in sendArray){
 	 				if(this.props.tableContent[index].GuID === sendArray[i]){
 						sendArray.splice(i, 1);
-						//console.log(this.props.tableContent[index].GuID)
  					}
 	 			}
 			}
-			 this.props.getSendData(sendArray)
+			 this.props.getSendData(sendArray);
+			 this.props.deleteCheckBoxes(this.state.checkBoxes)
 	 	 }
+		resetDelete(){
+			 this.setState({sendArray: []})
+		 }
      render() {
-/*        if(this.state.emailLists.length>0){
-            console.log(this.state.emailLists)
-        }*/
-		 console.log(this.props.tableContent)
           const data=this.props.tableContent
 		      const row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
