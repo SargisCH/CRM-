@@ -33,6 +33,7 @@
 .menu_item a{
 	padding-left:20px;
 	padding-top:18px;
+    /*padding-bottom: 5px;*/
 	box-sizing:border-box;
     text-decoration: none;
     color: azure;
@@ -46,6 +47,7 @@
     visibility: hidden !important;
     display: block !important;
     float: right !important;
+    padding: 0 !important;
     font-size: 36px;
 }
 .menu_item:hover{
@@ -57,17 +59,17 @@
 .active{
     background:  #202033;
 }
-@media (max-width:768px) {
+@media (max-width:1030px) {
     .menu.open{
-        width: 25%;
+        width: 20%;
         display: block;
     }
     .menu{
         display: none;
     }
 }
-@media (max-width:450px) {
+/*@media (max-width:450px) {
     .menu.open{
         width: 50%;
     }
-}
+}*/

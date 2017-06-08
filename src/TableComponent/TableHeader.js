@@ -14,7 +14,7 @@ class TableHeader extends Component{
 				<tr >
 					<th className="select">Select</th>
 					{header}
-					<th className="Actions">Actions</th>
+					<th className="Actions">Edit</th>
 				</tr>
 			</thead>
 		);

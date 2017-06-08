@@ -107,7 +107,7 @@ class TableRow extends Component{
 				 let firstName  = placeholders['Full Name'].slice(0, placeholders['Full Name'].indexOf(' '))
 				 let lastName = placeholders['Full Name'].slice(placeholders['Full Name'].indexOf(' '), placeholders['Full Name'].length);
 				 return (
-					 <div className="edit_block">
+					 <div className="edit_block block">
 						<div className="edit_form_block">
 							<div  className="edit_form">
 								<label htmlFor="first_name_edit"><br/>        

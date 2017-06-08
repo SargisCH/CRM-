@@ -13,7 +13,7 @@ const Menu=({...props})=> {
           </li>
           <li className="menu_item">
             <NavLink activeClassName="active" to='/mailingList'>
-              Mailing List
+              Mailing Lists
               <i className="activeMenuIcon fa fa-caret-left"></i>
             </NavLink>
           </li>

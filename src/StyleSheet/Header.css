@@ -61,7 +61,7 @@ h1{
 .menu_list{
     list-style-type: none;
 }*/
-@media (max-width:768px) {
+@media (max-width:1030px) {
 
     .menu_icon{
         display: block;

@@ -77,7 +77,7 @@ class AddContact extends Component{
         let addView;
         if(this.state.addContactBool === false){
             addView =
-                <button className="btn_table" onClick="target" onClick={this.changeAddContact}>Add contact</button>
+                <button className="btn_table" onClick="target" onClick={this.changeAddContact}>Add New Contact</button>
             } else {
                     addView = 
                     <div className="add_new_contact_form_container block">

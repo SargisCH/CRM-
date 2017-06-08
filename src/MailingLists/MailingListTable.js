@@ -2,7 +2,7 @@
  import '../StyleSheet/MailingLists.css';
 
  class MailingListTable extends Component {
-     constructor(props) {
+     constructor(props) { 
          super(props);
          this.state = {
 			 sendArray:[],
@@ -53,24 +53,26 @@
 		     	</tr>
 		     	);
         return (
-            <div className="mailing_list_table">
-				<h1> {this.props.mailingListName}</h1>
-                 <table>
-				 <thead>
-				 	<tr>
-						<th>Select</th>
-						<th>Full Name</th>
-						<th> Companty Name</th>
-						<th>Position</th>
-						<th>Country</th>
-						<th>Email</th>
-					</tr>
-				 </thead>
-                    <tbody>
-                        {row}
-                    </tbody>
-                 </table>
-            </div>
+			<div className="mailinglist_table_container">
+				<div className="mailing_list_table">
+					<h2 className="mailinglist_header"> {this.props.mailingListName}</h2>
+					<table className="table">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Full Name</th>
+							<th> Companty Name</th>
+							<th>Position</th>
+							<th>Country</th>
+							<th>Email</th>
+						</tr>
+					</thead>
+						<tbody>
+							{row}
+						</tbody>
+					</table>
+				</div>
+			</div>
         )
     }
 }

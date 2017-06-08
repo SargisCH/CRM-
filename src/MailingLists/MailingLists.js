@@ -4,9 +4,6 @@ import ChooseMailingList from './ChooseMailingList';
 import MailingListTable from './MailingListTable';
 import Loading from '../Loading.js';
 import Success from '../Success.js'
-
-
-
 class MailingLists extends Component {
     constructor(props) {
         super(props);
@@ -105,3 +102,6 @@ class MailingLists extends Component {
     }
 }
 export default MailingLists;
+
+
+

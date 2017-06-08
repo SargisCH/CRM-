@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TableHeader from'./TableHeader.js';
 import TableRow from './TableRow.js';
 import AddContact from './AddContact.js';
-import Loading from '../Loading.js';
+import Loading from '../Loading.js'; 
 import Success from '../Success.js';
 import '../StyleSheet/Table.css';
 import call from '../helpers/call.js'
@@ -108,6 +108,25 @@ class Table extends Component{
 			.then(response => {  response.error ? alert(response.message) : 
 				this.setState({data: response})})
 	}
+	uploadRender(){
+		if(this.state.upload){
+			return (
+				<div className="upload_form_container block">
+					<div className="upload_form">
+						<div className="upload_container">
+							<input  ref="upload_input" type="file" className="upload_input"/>
+							<div className="upload_buttons">
+								<input type="button" defaultValue="Upload" className="upload_btn" onClick={this.uploadFile}/>  
+								<input type="button" defaultValue="Cancel" className="upload_btn" onClick={this.changeUpload}/>
+							</div>
+						</div>
+					</div>
+				</div>
+			)
+		}else{
+			return <button  className="btn_table upload" onClick={this.changeUpload} > Upload File </button>
+		}
+	}
 	uploadFile(event){
 		if(this.refs.upload_input.value !== "") {
 		// this.setState({requestLoad:true})
@@ -168,9 +187,9 @@ class Table extends Component{
 			return(
 				<div className="delete_block block">
 					<div className="delete_popoUp">
-							<p>Are you sure?</p>
-							<button onClick={this.deleteContacts} id="popup_delete">Delete</button>
-							<button onClick={this.changeDeleteState}>Cancel</button>
+							<p>Are you want to delete?</p>
+							<button onClick={this.deleteContacts} id="popup_delete">Yes</button>
+							<button onClick={this.changeDeleteState}>No</button>
 					</div>
 				</div>
 			)
@@ -244,7 +263,7 @@ class Table extends Component{
 			return (
 				<div className="templateBlock block">
 					<div className="template">
-						<p>Choose Template</p>
+						<p className="popup_p">Choose Template</p>
 						<form type="radio" name="selection" className="templateForm">
 							{templateName}
 						</form>
@@ -273,7 +292,7 @@ class Table extends Component{
 	}
 	changeMailingListDisable(event){
 		this.setState({
-			mailingListDisabled:false,
+			mailingListDisabled:false, 
 			mailingListId:event.target.id,
 			mailingListName: event.target.dataset.name
 			
@@ -303,12 +322,13 @@ class Table extends Component{
 						<div className="subscribingMailigList">
 							<div className="existing_mailing_list">
 								<div className="mailingLIsts">
+									<p className="popup_p">Exicting Mailing Lists</p>
 									{choose}
 								</div>
-								<div className="clear"></div>
+								{/*<div className="clear"></div>*/}
 								<div className="mailingListButtons">
-									<input type="button" defaultValue="Add" onClick={this.addToMailingList} disabled={this.state.mailingListDisabled}/>
-									<input type="button" defaultValue="Cancel" onClick={this.changeMailingListShow} className="btn_table"/>
+									<input type="button" defaultValue="Add" onClick={this.addToMailingList} disabled={this.state.mailingListDisabled} className="ex_mailinglist_btn"/>
+									<input type="button" defaultValue="Cancel" onClick={this.changeMailingListShow} className="ex_mailinglist_btn"/>
 								</div>
 							</div>
 						</div>
@@ -318,7 +338,7 @@ class Table extends Component{
 				return <p>wait</p>
 			}
 		}else{
-			return <button disabled={this.state.disabled} onClick={this.changeMailingListShow} className="btn_table addToEmailList" >Add to email List</button>
+			return <button disabled={this.state.disabled} onClick={this.changeMailingListShow} className="btn_table addToEmailList" >Add to Existing List</button>
 		}
 	}
 	loading(){
@@ -359,18 +379,13 @@ class Table extends Component{
 						<AddContact data={this.state.data} getNewContacts={this.getNewContacts}/>
 					</div>
 					<div className="buttons">
-						<button id="upload_button">
-							<label htmlFor="file" onClick={this.uploadFile} className="upload_label" >
-								<input  ref="upload_input" type="file" className="inputfile" id="file"/>
-								<span>Upload file</span>
-							</label>
-						</button>
+						{this.uploadRender()}
 					</div>
-					<form className="buttons">
+					<div className="buttons">
 						<button  id="delete_button" onClick={this.changeDeleteState} 
 						disabled={this.state.disabled}>Delete Contact</button>
 						{this.createDeletePopUp()}
-					</form>
+					</div>
 					{this.state.successMessage && 
 						<Success changeSuccessMessage={this.changeSuccessMessage} addContactsFile={this.addContactsFile} file={this.state.file} message={this.state.successMessage}/>
 
@@ -382,3 +397,5 @@ class Table extends Component{
 	}
 }
 export default Table;	     	
+					
+					

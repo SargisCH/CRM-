@@ -1,54 +1,50 @@
- import React, { Component } from 'react';
- import '../StyleSheet/MailingLists.css';
- import call from '../helpers/call.js';
+import React, { Component } from 'react';
+import '../StyleSheet/MailingLists.css';
+import call from '../helpers/call.js';
 import Success from '../Success.js'
+class ChooseMailingList extends Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            deleteConfirm: false,
+            deleteId: 0,
+            sendView:false, 
+            sendId:0,
+            templateId: 0,
 
- class ChooseMailingList extends Component {
-     constructor(props) {
-         super(props);
-         this.state={
-             deleteConfirm: false,
-             deleteId: 0,
-             sendView:false,
-             sendId:0,
-             templateId: 0,
+        }
+        this.selectEmailList =this.selectEmailList.bind(this);
+        this.changeDeleteConfirm = this.changeDeleteConfirm.bind(this);
+        this.deleteEmailList = this.deleteEmailList.bind(this);
+        this.send = this.send.bind(this);
+        this.changeSendView = this.changeSendView.bind(this);
+        this.catchTemplateId = this.catchTemplateId.bind(this)
+}
 
-         }
-         this.selectEmailList =this.selectEmailList.bind(this);
-         this.changeDeleteConfirm = this.changeDeleteConfirm.bind(this);
-         this.deleteEmailList = this.deleteEmailList.bind(this);
-         this.send = this.send.bind(this);
-         this.changeSendView = this.changeSendView.bind(this);
-         this.catchTemplateId = this.catchTemplateId.bind(this)
-
-     }
-
-     changeDeleteConfirm(event){
-         this.setState({deleteConfirm: !this.state.deleteConfirm, deleteId:event.target.id})
-     }
-     deleteConfirmRender(){
-         if(this.state.deleteConfirm){
-           return <div className="deleteConfirmContainer">
-                <div className="deleteConfirm">
-                    <p>Are you want to delete </p>
-                    <button onClick={this.deleteEmailList}>Yes</button>
-                    <button onClick={this.changeDeleteConfirm}>No</button>
-                </div>
-           </div>     
-         }
-     }
-     deleteEmailList(){
-       let index = this.state.deleteId;
-       this.props.deleteEmailList(this.props.emailLists[index].EmailListID, index);
-        this.setState({deleteConfirm: !this.state.deleteConfirm, successMessage: "Mailing List is deleted"})
-
+    changeDeleteConfirm(event){
+        this.setState({deleteConfirm: !this.state.deleteConfirm, deleteId:event.target.id})
     }
-     componentDidMount(){
-         call('api/emaillists?id=' + this.props.emailLists[0].EmailListID,'GET').then(response => {  response.error ? alert(response.message) :
-         this.props.getDefaultEmailLists(response.Contacts, response.EmailListName, response.EmailListID)});   
-     }
-
-     selectEmailList(event){
+    deleteConfirmRender(){
+        if(this.state.deleteConfirm){
+        return <div className="deleteConfirmContainer block">
+            <div className="deleteConfirm delete_popoUp">
+                <p>Are you want to delete </p>
+                <button onClick={this.deleteEmailList}>Yes</button>
+                <button onClick={this.changeDeleteConfirm}>No</button>
+            </div>
+        </div>     
+        }
+    }
+    deleteEmailList(){
+        let index = this.state.deleteId;
+        this.props.deleteEmailList(this.props.emailLists[index].EmailListID, index);
+        this.setState({deleteConfirm: !this.state.deleteConfirm, successMessage: "Mailing List is deleted"})
+    }
+    componentDidMount(){
+        call('api/emaillists?id=' + this.props.emailLists[0].EmailListID,'GET').then(response => {  response.error ? alert(response.message) :
+        this.props.getDefaultEmailLists(response.Contacts, response.EmailListName, response.EmailListID)});   
+    }
+    selectEmailList(event){
         let index = event.target.id;
         console.log(index)
         let emailListId = this.props.emailLists[index].EmailListID;
@@ -58,7 +54,7 @@ import Success from '../Success.js'
         let index = this.state.sendId;
         let templateId= this.state.templateId;
         let emailListId = this.props.emailLists[index].EmailListID;
-       this.props.send(templateId, emailListId);
+        this.props.send(templateId, emailListId);
         this.setState({sendView: !this.state.sendView,successMessage: "template sent"})
      }
      catchTemplateId(event){
@@ -74,8 +70,9 @@ import Success from '../Success.js'
                 return <p key={index}> <input onClick={this.catchTemplateId} name="template" id={item.TemplateId} type="radio" />{item.TemplateName}</p>
             });
             return (
-            <div>
-                <div>
+            <div className="templateBlock block">
+				<div className="template">
+					<p className="popup_p">Choose Template</p>
                     {templates}
                     <button onClick={this.send}>Send</button>
                     <button onClick={this.changeSendView}>Cancel</button>
@@ -87,18 +84,26 @@ import Success from '../Success.js'
      render() {
         console.log(this.props.emailLists)
         const options = this.props.emailLists.map((item,index)=>{
-            return <p key={index}  className="options"   >
+            return <tr key={index} className="options">
+                <td className="mailingListName"><span id={index} onClick={this.selectEmailList}>{this.props.emailLists[index].EmailListName}</span></td>
+                <td className="mail_list_icon"><img id={index} onClick={this.changeSendView} aria-hidden="true" className="icon icons8-Sent" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAABHklEQVRIS72Wiw3CMAwF2wlgBDaAEcsElA1gA9igbMAIsAFMALnKQYZ+YpK0kSyEVPn8riaiLGY65UycAtDV1c7VcUoooJcAHu6zFuAtN1SDdO+DAJtcwCGQ70+yytXZFYmjTwjkGwMh5d5VlFYrSCc5CZSU5hMD0lr98gS1poC0VlJux7QCYqqN1MLsov/BRrR2fpO/N8NSQVcJA7AwfnlardYrKGWAFvgPaC0JdVIGCB001n3qYhtq4F3U8f4/6vjim1smHEtwEQC6vk6O9X66jqx35Yol6D0pIPRgg+kn+cFy9dCcFOZjTYQempNgUM8YNQRCD+6ZPqgnBsTuk6Axuwk8qBOhx7/cKD2hRPw58YBcATp9rFdQ8gCzgd4KdUp7nM7SmwAAAABJRU5ErkJggg=="/></td>
+                <td></td>
+                <td className="mail_list_icon"><img id={index} onClick={this.changeDeleteConfirm} aria-hidden="true" className="icon icons8-Delete" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABH0lEQVRoQ+2Z3Q2CQBCEoQJL0BLsREvQDizFDrQE6cQStAOtQPcMPGnCfHhgwDHhybnd+dnbkFAWI/+VI+dfWMCvE3QCU0tgE4IOLaKO8f82l/CcI6SQb3hnE0EEPHK5JtaRuEmguqEFiM43MMlcCTSVBKCBw8BJAsMwgl26COj7MiNOCDzQXUCcENgCtPlGpiKwE3AC7w54hLSpQChkKgL7EmtBIFMR2Ak4Aa/RlwN+nW65CmixILC3kLeQt5C3kHIL0GJBYG8hxf+Cfbf7ywRuYeRMMxOjrnFiQU51SeAUDVakCcBWgV0DPJu3unBy6NxDCveouYzn0reAVD+J2NcN56ThB2wam2TIjpJPtbqM0Jd88x63gLx+8mqjT+AJZMctMUe7N34AAAAASUVORK5CYII="/></td>
+            </tr>
+            {/*<p key={index}  className="options"   >
                 <span id={index}  onClick={this.selectEmailList} className="mailingListName">{this.props.emailLists[index].EmailListName}</span>
-                <i className="fa fa-times" id={index} onClick={this.changeDeleteConfirm} aria-hidden="true"></i>
+                <i className="fa fa-trash" id={index} onClick={this.changeDeleteConfirm} aria-hidden="true"></i>
                 <i className="fa fa-envelope-o" id={index} onClick={this.changeSendView} aria-hidden="true"></i>
-            </p>
+            </p>*/}
         })
         return (
             <div className="choose_mailing_list">
                 <div className="mailLingListSelection">      
-                        <div  className="mailingListItemsContainer" name="" id="">
-                            {options}
-                        </div>
+                        <table  className="mailingListItemsContainer" name="" id="">
+                            <tbody>
+                                {options}
+                            </tbody>
+                        </table>
                 </div>
                 {this.deleteConfirmRender()}
                 {this.sendRender()}
@@ -108,3 +113,5 @@ import Success from '../Success.js'
     }
 }
 export default ChooseMailingList;
+
+
