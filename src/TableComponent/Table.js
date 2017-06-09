@@ -97,7 +97,7 @@ class Table extends Component{
 
 			)
 		}else{
-			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} disabled={this.state.disabled}> Create Mailing List </button>
+			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} /*disabled={this.state.disabled}*/> Create Mailing List </button>
 		}
 	}
 	changeUpload(){
@@ -130,11 +130,11 @@ class Table extends Component{
 	}
 	uploadFile(event){
 		if(this.refs.upload_input.value !== "") {
-		this.setState({requestLoad:true})
 		event.preventDefault();
 		let data = new FormData();
     	let fileData = document.querySelector('input[type="file"]').files[0];
     	data.append("data", fileData);	
+			this.setState({requestLoad:true})
 			fetch("http://crmbetc.azurewebsites.net/api/contacts/upload", {
 				method: "POST",
 				"Content-Type": "multipart/form-data",
@@ -174,16 +174,15 @@ class Table extends Component{
 			 }
 		 }
 		 this.setState({data:deleteData})
-		 this.setState({requestLoad: true})
 		 call('api/contacts','DELETE', sendDeleteData).then(()=>{
-			 this.setState({successMessage: "Contacts is deleted"}); 
+			 this.setState({successMessage: "Contacts is deleted", requestLoad: false}); 
 			 this.refs.rows.resetDelete();
 			});
 		let checkBoxes = this.state.checkBoxes;
 		for(let i in checkBoxes){
 			checkBoxes[i].checked = false
 		}
-		this.setState({checkBoxes: checkBoxes, requestLoad: false});
+		this.setState({checkBoxes: checkBoxes });
 		this.setState({disabled:true});
 		this.changeDeleteState();
 	}

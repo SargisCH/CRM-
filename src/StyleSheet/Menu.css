@@ -80,3 +80,12 @@
         font-size: 30px;
     }
 }
+@media (max-width:550px) {
+    .menu_item a{
+        font-size: 0.8em;
+        padding-left: 0;
+    }
+    .activeMenuIcon{
+        font-size: 23px;
+    }
+}

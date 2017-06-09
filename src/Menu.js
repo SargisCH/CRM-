@@ -17,7 +17,6 @@ const Menu=({...props})=> {
               <i className="activeMenuIcon fa fa-caret-left"></i>
             </NavLink>
           </li>
-          {/*<li className="menu_item"><NavLink activeClassName="active" to='/sendemails'> Send Email </NavLink></li>*/}
         </ul>
       </div>
       );

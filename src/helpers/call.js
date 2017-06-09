@@ -1,5 +1,5 @@
 export default  function call(uri, method, body = false,  error_message = "Looks Like there is a problem"){
-  if(body !== false && method!=="GET" /*&& method!=="DELETE"*/){
+  if(body !== false && method!=="GET" ){
     body = JSON.stringify(body);
   }
   return fetch('http://crmbetc.azurewebsites.net/'+uri,{method: method,

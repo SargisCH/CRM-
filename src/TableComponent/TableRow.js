@@ -45,6 +45,7 @@ class TableRow extends Component{
 			 this.setState({sendArray: []})
 		 }
 		 save(){
+            this.setState({requestLoad: true})
 			let data = this.props.dataArray;
 			let emailTypeCheck = /\S+@\S+\.\S+/;
         	let arrayCheckRefs = [];
@@ -61,7 +62,6 @@ class TableRow extends Component{
 					GuID: this.state.savedGuId
 
 				} ;
-            this.setState({requestLoad: true})
 			fetch('http://crmbetc.azurewebsites.net/api/contacts',{
 				method: "PUT",
 				headers: {'Accept': 'application/json','Content-Type': "application/json"},
@@ -81,22 +81,24 @@ class TableRow extends Component{
 				this.props.savedData(data);
 				this.setState({editMode: !this.state.editMode, errorMessage:false, requestLoad: false, emptyField: "",emailType: ""});
             })
-				//this.setState({editMode: !this.state.editMode});
-			}else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email_edit.value) ){
-				this.setState({requestLoad: false, emptyField: ""})
 			.catch(error => {this.setState({errorMessage:error.message, requestLoad: false, emptyField: "", emailType: ""})});
-				this.setState({emailType: "Please Enter Correct Email"});
-				this.setState({errorMessage:false})
+			}else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email_edit.value) ){
+				this.setState({
+					requestLoad: false,
+					emptyField: "", 
+					emailType: "Please Enter Correct Email",
+					errorMessage:false
+				})
         	}else{
-				this.setState({requestLoad: false, emptyField: "Empty Field"}) 
-				this.setState({emailType: ""}) ;
-				this.setState({errorMessage:false})
+				this.setState({requestLoad: false, 
+					emptyField: "Empty Field",
+					emailType: "",
+					errorMessage:false
+				}) 
         	}
 		}
-
 		 changeEditMode(){
 			 this.setState({editMode: !this.state.editMode, errorMessage:false, emailType: "", emptyField: ""});
-			 
 		 }
 		 editOnClicks(event){
 			 this.changeEditMode();

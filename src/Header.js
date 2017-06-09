@@ -1,6 +1,5 @@
 import './StyleSheet/Header.css';
 import React, { Component } from 'react';
-//import { NavLink } from 'react-router-dom';
 import Menu from './Menu.js';
 class Header extends Component{
     constructor(){
@@ -26,12 +25,6 @@ class Header extends Component{
                         <div className="logo">
                             <h1>BetCRM</h1>
                         </div>
-                        {/*<div className="user flex">
-                            <ul className="list flex">
-                                <li className="list_item">Username</li>
-                                <li className="list_item"><NavLink activeStyle={{ backgroundColor: '#907a94' }} to='/login'>Log out</NavLink></li>
-                            </ul>
-                        </div>*/}
                     </div>
                 </div>
                 <Menu openStatus={this.state.menuStatus} />

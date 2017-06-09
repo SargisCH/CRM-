@@ -25,6 +25,7 @@ class AddContact extends Component{
         }
     }
     addNewContact(){
+        this.setState({requestLoad: true})
         let emailTypeCheck = /\S+@\S+\.\S+/;
         let arrayCheckRefs = [];
         for(let i in this.refs){
@@ -39,7 +40,6 @@ class AddContact extends Component{
                 Email: this.refs.email.value,
             };
             let newData = this.props.data;
-            this.setState({requestLoad: true})
 		fetch('http://crmbetc.azurewebsites.net/api/contacts',{
 			method: "POST",
 			headers: {'Accept': 'application/json','Content-Type': "application/json"},
@@ -49,7 +49,7 @@ class AddContact extends Component{
 				return res.json()
 			}
 			else{
-				      return res.json()
+				return res.json()
         .then(function(res) {
           throw new Error( res.Message);
         });
@@ -57,18 +57,27 @@ class AddContact extends Component{
 		}).then(response=>{
                 newData.push(response);
 			    this.props.getNewContacts(newData);
-                this.setState({addContactBool: !this.state.addContactBool, /*requestLoad:false*/})
+                this.setState({addContactBool: !this.state.addContactBool, requestLoad:false})
             })
-			.catch(error => {this.setState({errorMessage:error.message});this.errorMessageclose()});
-            this.setState({emptyField: false, emailType:false, requestLoad:false})
+			.catch(error => {this.setState({
+                    errorMessage:error.message, 
+                    requestLoad:false
+                });
+                this.errorMessageclose()});
         } else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email.value) ){
-            this.setState({emptyField: ""})
-            this.setState({emailType: "Please Enter Correct Email"}) 
-            this.setState({errorMessage:false})
+            this.setState({
+                emptyField: "",
+                emailType: "Please Enter Correct Email",
+                errorMessage:false, 
+                requestLoad:false
+            })
         }else{
-           this.setState({emptyField: "Empty Field"}) 
-           this.setState({emailType: ""}) 
-           this.setState({errorMessage:false})
+           this.setState({
+                emptyField: "Empty Field",
+                emailType: "",
+                errorMessage:false,
+                requestLoad:false
+            }) 
         }
     }
     render(){
