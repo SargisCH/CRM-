@@ -23,6 +23,7 @@ class TableRow extends Component{
 		this.editOnClicks =this.editOnClicks.bind(this);
 		this.save = this.save.bind(this);
 }
+						/*Combine GUID Array*/
 		 checkBoxChange(event){ 
 			let index = event.target.id;
 			let sendArray = this.state.sendArray;
@@ -41,9 +42,11 @@ class TableRow extends Component{
 			this.props.isDisable(sendArray);
 			this.props.deleteCheckBoxes(this.state.checkBoxes)
 		 }
+
          resetDelete(){
 			 this.setState({sendArray: []})
 		 }
+		 								/*Edit Save*/
 		 save(){
             this.setState({requestLoad: true})
 			let data = this.props.dataArray;
@@ -100,6 +103,7 @@ class TableRow extends Component{
 		 changeEditMode(){
 			 this.setState({editMode: !this.state.editMode, errorMessage:false, emailType: "", emptyField: ""});
 		 }
+		 									/*Edit*/
 		 editOnClicks(event){
 			 this.changeEditMode();
 			 this.editData(event)
@@ -153,8 +157,10 @@ class TableRow extends Component{
 			 }
 		 }
 	     render(){
+			 let row = false;
+			 if(this.props.dataArray.length > 0){
 			  const data=this.props.dataArray
-		      const row = data.map((data,index)=>
+		       row = data.map((data,index)=>
 		     	<tr key={index} ref={index}>
 					 <td><input className="check"  onChange={this.checkBoxChange} type="checkbox"  id={index}/> </td>
 			     	<td  key={`${data['Full Name']}Full Name`}>
@@ -179,6 +185,9 @@ class TableRow extends Component{
 			     	</td>
 		     	</tr>
 		     	);
+			 }else {
+				 row = <tr><td>There Is No Contacts</td></tr>
+			 }
 		     	return(
 					 	<tbody>
 						 	{row}

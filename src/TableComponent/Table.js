@@ -5,7 +5,7 @@ import AddContact from './AddContact.js';
 import Loading from '../Loading.js'; 
 import Success from '../Success.js';
 import '../StyleSheet/Table.css';
-import call from '../helpers/call.js'
+/*import call from '../helpers/call.js'*/
 class Table extends Component{
 	constructor(props){
 		super(props);
@@ -28,7 +28,9 @@ class Table extends Component{
 			mailingListName: false,
 			templateDisabled:true,
 			file: false,
-			requestLoad: false
+			requestLoad: false,
+			errorMessage: "Looks Like there is a problem"
+
 		}
 		this.postData = this.postData.bind(this);
 		this.getSendData = this.getSendData.bind(this);
@@ -53,32 +55,78 @@ class Table extends Component{
 		this.addContactsFile = this.addContactsFile.bind(this)
 	}
 	componentDidMount(){
-		let self = this;
         this.setState({requestLoad:true})
-		call('api/contacts','GET').then(response => {  response.error ? alert(response.message) : 
-				self.setState({data: response,requestLoad:false})});
-		call('api/templates','GET')
-		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})});
-		call('api/emaillists','GET')
-		.then(response => {  response.error ? alert(response.message) :this.setState({mailingLists: response})});
+			                         	/*Getting Contacts*/
+		fetch('http://crmbetc.azurewebsites.net/api/contacts').then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+				data: response,
+				requestLoad: false
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
+									/*Getting Templates*/
+		fetch('http://crmbetc.azurewebsites.net/api/templates').then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+				templateData: response
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+		})
+							/*Getting EmailLists*/
+		fetch('http://crmbetc.azurewebsites.net/api/emaillists').then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+				mailingLists: response
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+		})
 	}
-	
+		                         /*Create Email Lists*/
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
 	}
 	createEmailList(){
 		if(this.refs.mailingListName.value !== ""){
-		this.setState({requestLoad:true})
-			this.setState({namingEmailList: !this.state.namingEmailList})
+		this.setState({
+			requestLoad:true,
+			namingEmailList: !this.state.namingEmailList
+		})
 			let mailingLists = this.state.sendData;
 			let mailingList ={
 				EmailListName : this.refs.mailingListName.value,
 				contacts: mailingLists
 			}
-			let mailinglist  =this.state.mailingLists
- 
-			call('api/emaillists','POST', mailingList).then(res=>{this.setState({successMessage: 'Mailing List has been created', requestLoad:false});
-				mailinglist.push(res);
+			let mailinglist  = this.state.mailingLists
+			fetch('http://crmbetc.azurewebsites.net/api/emaillists', {method: "POST",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify(mailingList),
+    		}).then(response => {
+				if (response.ok ) {
+					return response.json();
+				}
+			}).then(response => {
+				this.setState({
+					successMessage: 'Mailing List has been created', 
+					requestLoad:false
+				})
+				mailinglist.push(response);
+			}).catch(error => {
+				alert(this.state.errorMessage);
+				this.setState({requestLoad:false})
 			})
 		}
 	}
@@ -99,15 +147,10 @@ class Table extends Component{
 		}else{
 			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} /*disabled={this.state.disabled}*/> Create Mailing List </button>
 		}
-	}
+	}			
+										/*Upload*/
 	changeUpload(){
 		this.setState({upload: !this.state.upload})
-	}
-	addContactsFile(){
-		this.setState({requestLoad:true})
-		call('api/contacts','GET')
-			.then(response => {  response.error ? alert(response.message) : 
-				this.setState({data: response, requestLoad:false})})
 	}
 	uploadRender(){
 		if(this.state.upload){
@@ -148,6 +191,23 @@ class Table extends Component{
 		}
 		this.setState({requestLoad:false})
 	}		
+	addContactsFile(){
+		this.setState({requestLoad:true})
+		fetch('http://crmbetc.azurewebsites.net/api/contacts').then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+				data: response,
+				requestLoad: false
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
+	}										
+									/*Send Email*/
 	getSendData(sendData){
 		this.setState({sendData :sendData});
 	}
@@ -158,62 +218,26 @@ class Table extends Component{
 			this.setState({disabled:true})
 		}
 	}
-	
-	deleteCheckBoxes(checkBoxes){
-		this.setState({checkBoxes:checkBoxes})
-	}
-	deleteContacts(sendDeleteData){
-		this.setState({requestLoad: true})
-		 sendDeleteData = this.state.sendData;
-		 let deleteData = this.state.data;
-		 for(let i in sendDeleteData){
-			 for(let j in deleteData){
-				 if(sendDeleteData[i] === deleteData[j].GuID){
-					 deleteData.splice(j,1)
-				 }
-			 }
-		 }
-		 this.setState({data:deleteData})
-		 call('api/contacts','DELETE', sendDeleteData).then(()=>{
-			 this.setState({successMessage: "Contacts is deleted", requestLoad: false}); 
-			 this.refs.rows.resetDelete();
-			});
-		let checkBoxes = this.state.checkBoxes;
-		for(let i in checkBoxes){
-			checkBoxes[i].checked = false
-		}
-		this.setState({checkBoxes: checkBoxes });
-		this.setState({disabled:true});
-		this.changeDeleteState();
-	}
-	createDeletePopUp(){
-		if(this.state.delete){
-			return(
-				<div className="delete_block block">
-					<div className="delete_popoUp">
-							<p>Are you want to delete?</p>
-							<button onClick={this.deleteContacts} id="popup_delete">Yes</button>
-							<button onClick={this.changeDeleteState}>No</button>
-					</div>
-				</div>
-			)
-		}
-	}
-	changeDeleteState(){
-		this.setState({delete:!this.state.delete});
-	}
-	savedData(obj){
-		this.setState({data:obj, successMessage: "New Contatcts is saved"})
-	}
 	postData(sendData){
 		this.setState({requestLoad: true})
 		sendData = this.state.sendData;
-		call('api/sendemails?template='+this.state.templateId,'POST', sendData).then(()=>this.setState({successMessage: "Email has been sent successfully", requestLoad:false}));
 		this.changeTemplateState();
+		 fetch('http://crmbetc.azurewebsites.net/api/sendemails?template='+this.state.templateId,{method: "POST",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify(sendData)
+    	}).then(response => {
+			if (response.ok ) {
+				this.setState({
+					successMessage: "Email has been sent successfully", 
+					requestLoad:false
+				})
+			}
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
 	}	
-	getNewContacts(newContactobj){
-		this.setState({data:newContactobj, successMessage:"New Contacts is added"})
-	}
+						/*Send Email Templates*/
 	changeTemplateState(){
 		this.setState({template: !this.state.template})
 		this.setState({templateDisabled: true});
@@ -261,6 +285,72 @@ class Table extends Component{
 			this.setState({templateDisabled:false});
 		}
 	}
+									/*Delete Contacts*/
+	deleteCheckBoxes(checkBoxes){
+		this.setState({checkBoxes:checkBoxes})
+	}
+	deleteContacts(sendDeleteData){
+		this.setState({requestLoad: true})
+		 sendDeleteData = this.state.sendData;
+		 let deleteData = this.state.data;
+		 for(let i in sendDeleteData){
+			 for(let j in deleteData){
+				 if(sendDeleteData[i] === deleteData[j].GuID){
+					 deleteData.splice(j,1)
+				 }
+			 }
+		 }
+		 this.setState({data:deleteData})
+		 fetch('http://crmbetc.azurewebsites.net/api/contacts', {method: "DELETE",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify(sendDeleteData),
+    	}).then(response => {
+			if (response.ok ) {
+				return response.json();
+
+			}
+		}).then(response => {
+			this.setState({
+				successMessage: "Contacts is deleted", 
+				requestLoad: false
+			})
+			this.refs.rows.resetDelete();
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
+		let checkBoxes = this.state.checkBoxes;
+		for(let i in checkBoxes){
+			checkBoxes[i].checked = false
+		}
+		this.setState({checkBoxes: checkBoxes });
+		this.setState({disabled:true});
+		this.changeDeleteState();
+	}
+	createDeletePopUp(){
+		if(this.state.delete){
+			return(
+				<div className="delete_block block">
+					<div className="delete_popoUp">
+							<p>Are you want to delete?</p>
+							<button onClick={this.deleteContacts} id="popup_delete">Yes</button>
+							<button onClick={this.changeDeleteState}>No</button>
+					</div>
+				</div>
+			)
+		}
+	}
+	changeDeleteState(){
+		this.setState({delete:!this.state.delete});
+	}					
+					/*Save New Contacts*/
+	savedData(obj){
+		this.setState({data:obj, successMessage: "New Contatcts is saved"})
+	}
+	getNewContacts(newContactobj){
+		this.setState({data:newContactobj, successMessage:"New Contacts is added"})
+	}
+								/*Add to mailing List*/
 	changeMailingListShow(){
 		this.setState({mailingListShow: !this.state.mailingListShow})
 	}
@@ -268,9 +358,23 @@ class Table extends Component{
 		if(this.state.mailingListName){
 			this.setState({requestLoad:true})
 			let id = this.state.mailingListId;
-			call('api/emaillists/update?id=' + id + '&flag=true','PUT', this.state.sendData).then(this.setState({
-				successMessage: "Folowing contacts is added to " + this.state.mailingListName, mailingListName: false, requestLoad:false  }));	
-			this.changeMailingListShow();
+			fetch('http://crmbetc.azurewebsites.net/api/emaillists/update?id=' + id + '&flag=true',{method: "PUT",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify( this.state.sendData),
+    	}).then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+				successMessage: "Folowing contacts is added to " + this.state.mailingListName, 
+				mailingListName: false, requestLoad:false
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
+		this.changeMailingListShow()
 		}
 	}
 	changeMailingListDisable(event){
@@ -320,9 +424,11 @@ class Table extends Component{
 			return <button disabled={this.state.disabled} onClick={this.changeMailingListShow} className="btn_table addToEmailList" >Add to Existing List</button>
 		}
 	}
+												/*Success Message*/
 	changeSuccessMessage(message){
 		this.setState({successMessage: message})
 	}
+
 	render(){
 		return (
 			<div className='TableContainer'>

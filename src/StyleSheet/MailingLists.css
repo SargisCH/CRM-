@@ -106,6 +106,9 @@
         margin: 1%;
     }
 }
+.emptyEmailLists{
+    text-align: center
+}
 /*.mailingListItemsContainer{
     overflow-y: 250px;
 }*/

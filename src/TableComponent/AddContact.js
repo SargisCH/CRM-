@@ -114,7 +114,6 @@ class AddContact extends Component{
                             {this.state.emptyField && <p className="error" id="1234">{this.state.emptyField}</p>}
                             {this.state.emailType && <p className="error " id="123">{this.state.emailType}</p>}      
                                                 {this.state.requestLoad && <div id="loading">
-                    console.log("dsadas")
 							<Loading/>
                     </div>}            
                             </div>       

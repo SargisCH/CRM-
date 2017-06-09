@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import call from '../helpers/call.js';
+/*import call from '../helpers/call.js';*/
 import ChooseMailingList from './ChooseMailingList';
 import MailingListTable from './MailingListTable';
 import Loading from '../Loading.js';
@@ -17,9 +17,9 @@ class MailingLists extends Component {
             disabled:true,
             successMessage:false,
             checkBoxes: [],
-            requestLoad: false
+            requestLoad: false,
+            errorMessage: "Looks Like there is a problem"
          };
-         this.getDefaultEmailLists =this.getDefaultEmailLists.bind(this);
          this.getEmailListById = this.getEmailListById.bind(this);
          this.deleteEmailList = this.deleteEmailList.bind(this);
          this.send = this.send.bind(this);
@@ -28,37 +28,94 @@ class MailingLists extends Component {
          this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
          this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this)
     }
-
+                                          /*Getting Data*/
     componentDidMount(){
-        call('api/emaillists','GET').then(response => {  response.error ? alert(response.message) :
-        this.setState({emailLists: response})});   
-        call('api/templates','GET')
-		.then(response => {  response.error ? alert(response.message) :this.setState({templateData: response})}); 
+        this.setState({requestLoad: true})
+        fetch('http://crmbetc.azurewebsites.net/api/emaillists').then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+                emailLists: response, 
+                requestLoad:false
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
+        fetch('http://crmbetc.azurewebsites.net/api/templates').then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+                templateData: response
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
     }
     changeSuccessMessage(message){
          this.setState({successMessage: message})
      }
-    getDefaultEmailLists(tableContent, mailingListName, emailListId){
-        this.setState({tableContent: tableContent, mailingListName:mailingListName,emailListId: emailListId})
-    }
+                                    /*Get Email List*/
     getEmailListById(id){
         this.setState({emailListId: id})
-        call('api/emaillists?id=' + id,'GET')
-        .then(response=>this.setState({tableContent: response.Contacts, mailingListName: response.EmailListName}))
-    }
+        fetch('http://crmbetc.azurewebsites.net/api/emaillists?id=' + id).then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+                tableContent: response.Contacts, 
+                mailingListName: response.EmailListName
+			})
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
+    }                               /*Delete Email List*/
     deleteEmailList(id,index){
         let updatedEmailLists = this.state.emailLists;
         this.setState({requestLoad:true})
-       call('api/emaillists?id='+ id, 'DELETE').then(res=>{updatedEmailLists.splice(index,1); this.setState({
-            emailLists: updatedEmailLists,successMessage: "Mailing List is deleted", requestLoad: false
-        })})
+        fetch('http://crmbetc.azurewebsites.net/api/emaillists?id='+ id, {method: "DELETE",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    	}).then(response => {
+			if (response.ok ) {
+				updatedEmailLists.splice(index,1); 
+                this.setState({
+                    emailLists: updatedEmailLists,
+                    successMessage: "Mailing List is deleted", 
+                    requestLoad: false, 
+                    tableContent: null
+                })
+			}
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
     }
     deleteCheckBoxes(checkBoxes){
         this.setState({checkBoxes: checkBoxes})
     }
+                                    /*Send Email List mail*/
     send(templateId, emailListId){
         this.setState({requestLoad:true})
-        call('api/sendemails?template='+ templateId+'&emaillistId='+emailListId,'POST').then(()=>this.setState({successMessage: "Email has been sent successfully", requestLoad:false}));  
+        fetch('http://crmbetc.azurewebsites.net/api/sendemails?template='+ templateId+'&emaillistId='+emailListId, {method: "POST",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"}
+    		}).then(response => {
+				if (response.ok ) {
+					this.setState({
+                        successMessage: "Email has been sent successfully", 
+                        requestLoad:false
+				    })
+				}
+			}).catch(error => {
+				alert(this.state.errorMessage);
+				this.setState({requestLoad:false})
+			})
     }
     SendEmail(sendData){
 		this.setState({sendData :sendData});
@@ -71,7 +128,7 @@ class MailingLists extends Component {
         }
 		this.setState({sendData :sendData});
 	}
-    
+                            /*Delete Contacts*/
    deleteContacts(sendDeleteData){
 		 sendDeleteData = this.state.sendData;
 		 let deleteData = this.state.tableContent;
@@ -88,30 +145,45 @@ class MailingLists extends Component {
 			checkBoxes[i].checked = false
 		}
         this.setState({requestLoad: true})
-		 call('api/emaillists/update?id='+id+'&flag=false','PUT', sendDeleteData).then(res=>{this.setState({
-             tableContent: deleteData, successMessage: "Folowing Contacts is deleted", requestLoad:false});this.refs.resetGuids.resetDelete()}); 
-             this.setState({disabled:true});
+        fetch('http://crmbetc.azurewebsites.net/api/emaillists/update?id='+id+'&flag=false',{method: "PUT",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify( sendDeleteData),
+    	}).then(response => {
+			if (response.ok ) {
+				return response.json();
+			}
+		}).then(response => {
+			this.setState({
+				tableContent: deleteData, 
+                successMessage: "Folowing Contacts is deleted", 
+                requestLoad:false,  
+                disabled:true  
+            })
+            this.refs.resetGuids.resetDelete()
+		}).catch(error => {
+			alert(this.state.errorMessage);
+			this.setState({requestLoad: false})
+		})
 	}
     render() {
         return (
             <div className="mailing_list_container">
-                {this.state.emailLists.length > 0 && <ChooseMailingList getDefaultEmailLists={this.getDefaultEmailLists}
+                {this.state.emailLists.length > 0 ? <ChooseMailingList 
                 emailLists={this.state.emailLists}  deleteEmailList={this.deleteEmailList} 
-                templateData={this.state.templateData} send={this.send} getEmailListById={this.getEmailListById}/> }
+                templateData={this.state.templateData} send={this.send} getEmailListById={this.getEmailListById}/>: 
+                <h1 className="emptyEmailLists">There Is No Email List</h1> }
                 <div className="mailingListTableContainer">
-                    {this.state.tableContent  !== null ? <MailingListTable  deleteCheckBoxes={this.deleteCheckBoxes} ref="resetGuids"
-                    tableContent={this.state.tableContent} getSendData={this.getSendData} mailingListName={this.state.mailingListName}/>: 
-                    <div id="loading"><Loading/></div> }
-                    <div className="deleteContactsBlock">
+                     <MailingListTable  deleteCheckBoxes={this.deleteCheckBoxes} ref="resetGuids"
+                    tableContent={this.state.tableContent} getSendData={this.getSendData}
+                     mailingListName={this.state.mailingListName}/>
+                    {this.state.tableContent !== null &&  <div className="deleteContactsBlock">
                         <button disabled={this.state.disabled} onClick={this.deleteContacts} className="btn_table"> Delete</button>
-                    </div>
+                    </div>}
                 </div>    
                   {this.state.successMessage && <Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>}
                   {this.state.requestLoad && <div id="loading"> <Loading/> </div>}
             </div>
         )
-
-        
     }
 }
 export default MailingLists;

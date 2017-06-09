@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import '../StyleSheet/MailingLists.css';
-import call from '../helpers/call.js';
 class ChooseMailingList extends Component {
     constructor(props) {
         super(props);
@@ -38,10 +37,6 @@ class ChooseMailingList extends Component {
         let index = this.state.deleteId;
         this.props.deleteEmailList(this.props.emailLists[index].EmailListID, index);
         this.setState({deleteConfirm: !this.state.deleteConfirm, successMessage: "Mailing List is deleted"})
-    }
-    componentDidMount(){
-        call('api/emaillists?id=' + this.props.emailLists[0].EmailListID,'GET').then(response => {  response.error ? alert(response.message) :
-        this.props.getDefaultEmailLists(response.Contacts, response.EmailListName, response.EmailListID)});   
     }
     selectEmailList(event){
         let index = event.target.id;
