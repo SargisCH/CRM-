@@ -29,7 +29,8 @@
 }
 .mailingListName span:hover{
     color: #373741;
-    font-size: 1.305em;
+    transition: 0.5s;
+    font-size: 1.2em;
 }
 .choose_mailing_list{
     width: 22%;
@@ -82,7 +83,6 @@
      background-color: rgb(40, 47, 71); 
 }
 .mailingListName{
-    /*width:100%;*/
     max-width: 100px;
     overflow:hidden; 
     white-space:nowrap; 
@@ -109,6 +109,3 @@
 .emptyEmailLists{
     text-align: center
 }
-/*.mailingListItemsContainer{
-    overflow-y: 250px;
-}*/

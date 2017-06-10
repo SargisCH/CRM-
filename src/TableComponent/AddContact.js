@@ -57,11 +57,14 @@ class AddContact extends Component{
 		}).then(response=>{
                 newData.push(response);
 			    this.props.getNewContacts(newData);
-                this.setState({addContactBool: !this.state.addContactBool, requestLoad:false})
+                this.setState({addContactBool: !this.state.addContactBool, requestLoad:false, errorMessage: false})
             })
 			.catch(error => {this.setState({
                     errorMessage:error.message, 
-                    requestLoad:false
+                    requestLoad:false,
+                    emptyField: "",
+                    emailType: "",
+
                 });
                 this.errorMessageclose()});
         } else if(arrayCheckRefs.every(elem => elem !== "" ) && !emailTypeCheck.test(this.refs.email.value) ){

@@ -11,7 +11,7 @@
 	 	};
 		this.checkBoxChange = this.checkBoxChange.bind(this);
      }
-	 						/*Combine GUID Array*/
+	 							/*Combine GUID Array*/
 	 checkBoxChange(event){
 	 		let index = event.target.id;
 	 		let sendArray = this.state.sendArray;

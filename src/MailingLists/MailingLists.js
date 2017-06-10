@@ -28,7 +28,7 @@ class MailingLists extends Component {
          this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
          this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this)
     }
-                                          /*Getting Data*/
+                                    /*Getting Data*/
     componentDidMount(){
         this.setState({requestLoad: true})
         fetch('http://crmbetc.azurewebsites.net/api/emaillists').then(response => {
@@ -76,7 +76,8 @@ class MailingLists extends Component {
 			alert(this.state.errorMessage);
 			this.setState({requestLoad: false})
 		})
-    }                               /*Delete Email List*/
+    }
+                                    /*Delete Email List*/
     deleteEmailList(id,index){
         let updatedEmailLists = this.state.emailLists;
         this.setState({requestLoad:true})
@@ -100,7 +101,7 @@ class MailingLists extends Component {
     deleteCheckBoxes(checkBoxes){
         this.setState({checkBoxes: checkBoxes})
     }
-                                    /*Send Email List mail*/
+                                         /*Send Email List mail*/
     send(templateId, emailListId){
         this.setState({requestLoad:true})
         fetch('http://crmbetc.azurewebsites.net/api/sendemails?template='+ templateId+'&emaillistId='+emailListId, {method: "POST",
@@ -128,7 +129,7 @@ class MailingLists extends Component {
         }
 		this.setState({sendData :sendData});
 	}
-                            /*Delete Contacts*/
+                                        /*Delete Contacts*/
    deleteContacts(sendDeleteData){
 		 sendDeleteData = this.state.sendData;
 		 let deleteData = this.state.tableContent;

@@ -23,7 +23,7 @@ class TableRow extends Component{
 		this.editOnClicks =this.editOnClicks.bind(this);
 		this.save = this.save.bind(this);
 }
-						/*Combine GUID Array*/
+												/*Combine GUID Array*/
 		 checkBoxChange(event){ 
 			let index = event.target.id;
 			let sendArray = this.state.sendArray;
@@ -42,11 +42,10 @@ class TableRow extends Component{
 			this.props.isDisable(sendArray);
 			this.props.deleteCheckBoxes(this.state.checkBoxes)
 		 }
-
          resetDelete(){
 			 this.setState({sendArray: []})
 		 }
-		 								/*Edit Save*/
+		 											/*Edit Save*/
 		 save(){
             this.setState({requestLoad: true})
 			let data = this.props.dataArray;
@@ -100,10 +99,10 @@ class TableRow extends Component{
 				}) 
         	}
 		}
+													/*Edit*/
 		 changeEditMode(){
 			 this.setState({editMode: !this.state.editMode, errorMessage:false, emailType: "", emptyField: ""});
 		 }
-		 									/*Edit*/
 		 editOnClicks(event){
 			 this.changeEditMode();
 			 this.editData(event)
@@ -186,7 +185,7 @@ class TableRow extends Component{
 		     	</tr>
 		     	);
 			 }else {
-				 row = <tr><td>There Is No Contacts</td></tr>
+				 row = <tr><td><h1 className="empty_contacts">There Is No Contacts</h1></td></tr>
 			 }
 		     	return(
 					 	<tbody>

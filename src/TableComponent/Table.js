@@ -5,7 +5,6 @@ import AddContact from './AddContact.js';
 import Loading from '../Loading.js'; 
 import Success from '../Success.js';
 import '../StyleSheet/Table.css';
-/*import call from '../helpers/call.js'*/
 class Table extends Component{
 	constructor(props){
 		super(props);
@@ -56,6 +55,7 @@ class Table extends Component{
 	}
 	componentDidMount(){
         this.setState({requestLoad:true})
+				
 			                         	/*Getting Contacts*/
 		fetch('http://crmbetc.azurewebsites.net/api/contacts').then(response => {
 			if (response.ok ) {
@@ -93,8 +93,8 @@ class Table extends Component{
 			})
 		}).catch(error => {
 			alert(this.state.errorMessage);
-		})
-	}
+		   })
+		}
 		                         /*Create Email Lists*/
 	changeNamilngList(){
 		this.setState({namingEmailList: !this.state.namingEmailList})
@@ -137,18 +137,20 @@ class Table extends Component{
 					<div className="mailing_list_form">
 						<div className="mailing_list_input">
 							<p>Name of mailing list <input  ref="mailingListName" type="text"/></p>
-							<button id="btn_create" className="btn_table" onClick={this.createEmailList}> Create </button>
-							<button id="mail_btn_cancel" className="btn_table" onClick={this.changeNamilngList} > Cancel </button>
+							<div className="mail_list_buttons">
+								<button id="btn_create" className="btn_table" onClick={this.createEmailList}> Create </button>
+								<button id="mail_btn_cancel" className="btn_table" onClick={this.changeNamilngList} > Cancel </button>
+							</div>
 						</div>
 					</div>
 				</div>
 
 			)
 		}else{
-			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} /*disabled={this.state.disabled}*/> Create Mailing List </button>
+			return <button  className="btn_table create_email_list" onClick={this.changeNamilngList} > Create Mailing List </button>
 		}
-	}			
-										/*Upload*/
+	}
+														/*Upload*/
 	changeUpload(){
 		this.setState({upload: !this.state.upload})
 	}
@@ -184,8 +186,18 @@ class Table extends Component{
 				"Accept": "application/json",
 				body: data
 			}).then(function (res) {
-				return res.json()
+				if(res.ok){
+					return res.json()
+				}else{
+					return res.json()
+					.then(res=>{
+						throw new Error(res.Message)
+					})
+				}
 			}).then(res => {this.setState({successMessage: res})})
+			.catch(error =>{
+				this.setState({successMessage: error.message})
+			})
 			this.changeUpload();
 			this.setState({file:true})
 		}
@@ -206,8 +218,8 @@ class Table extends Component{
 			alert(this.state.errorMessage);
 			this.setState({requestLoad: false})
 		})
-	}										
-									/*Send Email*/
+	}
+														/*Send Email*/
 	getSendData(sendData){
 		this.setState({sendData :sendData});
 	}
@@ -237,12 +249,11 @@ class Table extends Component{
 			this.setState({requestLoad: false})
 		})
 	}	
-						/*Send Email Templates*/
+													/*Send Email Templates*/
 	changeTemplateState(){
 		this.setState({template: !this.state.template})
 		this.setState({templateDisabled: true});
 	}
-	
 	createTemplates(){
 		if(this.state.template){
 			const templateArr = this.state.templateData;
@@ -285,7 +296,7 @@ class Table extends Component{
 			this.setState({templateDisabled:false});
 		}
 	}
-									/*Delete Contacts*/
+													/*Delete Contacts*/
 	deleteCheckBoxes(checkBoxes){
 		this.setState({checkBoxes:checkBoxes})
 	}
@@ -342,15 +353,15 @@ class Table extends Component{
 	}
 	changeDeleteState(){
 		this.setState({delete:!this.state.delete});
-	}					
-					/*Save New Contacts*/
+	}
+												/*Save New Contacts*/
 	savedData(obj){
 		this.setState({data:obj, successMessage: "New Contatcts is saved"})
 	}
 	getNewContacts(newContactobj){
 		this.setState({data:newContactobj, successMessage:"New Contacts is added"})
 	}
-								/*Add to mailing List*/
+													/*Add to mailing List*/
 	changeMailingListShow(){
 		this.setState({mailingListShow: !this.state.mailingListShow})
 	}
@@ -428,7 +439,6 @@ class Table extends Component{
 	changeSuccessMessage(message){
 		this.setState({successMessage: message})
 	}
-
 	render(){
 		return (
 			<div className='TableContainer'>
