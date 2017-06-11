@@ -114,11 +114,11 @@ class TableRow extends Component{
 			this.setState({savedId: index })
 			this.setState({savedGuId: this.props.dataArray[index].GuID})
 		 }
-		 editRender(id, event){
+		 editRender(id){
 			 if(this.state.editMode){
 				 let placeholders = this.state.editData; 
 				 let firstName  = placeholders['Full Name'].slice(0, placeholders['Full Name'].indexOf(' '))
-				 let lastName = placeholders['Full Name'].slice(placeholders['Full Name'].indexOf(' '), placeholders['Full Name'].length);
+				 let lastName = placeholders['Full Name'].slice(placeholders['Full Name'].indexOf(' ')+1, placeholders['Full Name'].length);
 				 return (
 					 <div className="edit_block block">
 						<div className="edit_form_block">

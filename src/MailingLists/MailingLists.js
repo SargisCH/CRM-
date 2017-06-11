@@ -26,7 +26,8 @@ class MailingLists extends Component {
          this.deleteContacts = this.deleteContacts.bind(this);
          this.getSendData = this.getSendData.bind(this);
          this.changeSuccessMessage = this.changeSuccessMessage.bind(this);
-         this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this)
+         this.deleteCheckBoxes = this.deleteCheckBoxes.bind(this);
+         this.saveNewEmailListName = this.saveNewEmailListName.bind(this)
     }
                                     /*Getting Data*/
     componentDidMount(){
@@ -166,10 +167,27 @@ class MailingLists extends Component {
 			this.setState({requestLoad: false})
 		})
 	}
+                                            /*Save  Email List New Name */
+    saveNewEmailListName(obj, id){
+        this.setState({requestLoad: true})
+		fetch("http://crmbetc.azurewebsites.net/api/emaillists", {method: "PUT",
+    			headers: {'Accept': 'application/json','Content-Type': "application/json"},
+    			body : JSON.stringify( obj)
+        }).then(response=>{
+            if(response.ok){
+                return response.json()
+            }
+        }).then(response=>{
+            let emailLists = this.state.emailLists;
+            emailLists[id] = obj
+            this.setState({emailLists: emailLists, successMessage: "Email List Name Successfully Updated",requestLoad: false });
+            this.getEmailListById(obj.EmailListID)
+        })
+	}
     render() {
         return (
             <div className="mailing_list_container">
-                {this.state.emailLists.length > 0 ? <ChooseMailingList 
+                {this.state.emailLists.length > 0 ? <ChooseMailingList saveNewEmailListName={this.saveNewEmailListName}
                 emailLists={this.state.emailLists}  deleteEmailList={this.deleteEmailList} 
                 templateData={this.state.templateData} send={this.send} getEmailListById={this.getEmailListById}/>: 
                 <h1 className="emptyEmailLists">There Is No Email List</h1> }
@@ -178,7 +196,7 @@ class MailingLists extends Component {
                     tableContent={this.state.tableContent} getSendData={this.getSendData}
                      mailingListName={this.state.mailingListName}/>
                     {this.state.tableContent !== null &&  <div className="deleteContactsBlock">
-                        <button disabled={this.state.disabled} onClick={this.deleteContacts} className="btn_table"> Delete</button>
+                        <button disabled={this.state.disabled} onClick={this.deleteContacts} className="btn_table"> Delete Contact</button>
                     </div>}
                 </div>    
                   {this.state.successMessage && <Success changeSuccessMessage={this.changeSuccessMessage} message={this.state.successMessage}/>}

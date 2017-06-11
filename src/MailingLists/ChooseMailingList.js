@@ -9,6 +9,9 @@ class ChooseMailingList extends Component {
             sendView:false, 
             sendId:0,
             templateId: 0,
+            edit:false,
+            editData:{},
+            editId: ""
 
         }
         this.selectEmailList =this.selectEmailList.bind(this);
@@ -16,7 +19,10 @@ class ChooseMailingList extends Component {
         this.deleteEmailList = this.deleteEmailList.bind(this);
         this.send = this.send.bind(this);
         this.changeSendView = this.changeSendView.bind(this);
-        this.catchTemplateId = this.catchTemplateId.bind(this)
+        this.catchTemplateId = this.catchTemplateId.bind(this);
+        this.changeEditRender = this.changeEditRender.bind(this);
+        this.editClicks = this.editClicks.bind(this);
+        this.save = this.save.bind(this)
 }
 
     changeDeleteConfirm(event){
@@ -56,6 +62,7 @@ class ChooseMailingList extends Component {
      changeSendView(event){
          this.setState({sendView: !this.state.sendView, sendId:event.target.id})
      }
+                                        /*Send Email Templates*/
      sendRender(){
          if(this.state.sendView){
             const templateData = this.props.templateData;
@@ -90,12 +97,52 @@ class ChooseMailingList extends Component {
             </div> 
             )
          }   
+     }                                  /*Edit Email List Name*/
+     editClicks(event){
+        this.changeEditRender();
+        this.editData(event)
+
+     }
+     editData(event){
+        let index = event.target.id
+        let editableObject = this.props.emailLists[index]
+        this.setState({editData: editableObject, editId:index});
+     }
+     editRender(id){
+         if(this.state.edit){
+            return <div className="edit_block block">
+                <div className="edit_form_block" id="editForm">
+                        <div className="edit_form" >
+                        <label htmlFor="new_name">
+                            <span>New Name</span><input ref="new_name" defaultValue={this.state.editData.EmailListName} className="new_mailing_list_name" type="text" id="new_name" />
+                        </label><br/>
+                            <input type="button"  className="edit_btn" onClick={this.save} defaultValue="Save"/>
+                            <input type="button" className="edit_btn" onClick={this.changeEditRender} defaultValue="Cancel"/>
+                        </div>
+                    </div>
+                     <i  id ={id} className="fa fa-edit" aria-hidden="true" onClick={this.editClicks} ></i>
+            </div>        
+            }else{
+                return <i  id ={id} className="fa fa-edit" aria-hidden="true" onClick={this.editClicks} ></i>
+            }
+     }
+     save(){
+         if(this.refs.new_name.value !== ""){
+            let editableObject = this.state.editData
+            editableObject.EmailListName = this.refs.new_name.value;
+            this.props.saveNewEmailListName(editableObject, this.state.editId)
+            this.changeEditRender();
+         }
+     }
+     changeEditRender(){
+         this.setState({edit: !this.state.edit})
      }
      render() {
         const options = this.props.emailLists.map((item,index)=>{
             return <tr key={index} className="options">
                 <td className="mailingListName"><span id={index} onClick={this.selectEmailList}>{this.props.emailLists[index].EmailListName}</span></td>
                 <td className="mail_list_icon"><img alt="send" id={index} onClick={this.changeSendView} aria-hidden="true" className="icon icons8-Sent" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAABHklEQVRIS72Wiw3CMAwF2wlgBDaAEcsElA1gA9igbMAIsAFMALnKQYZ+YpK0kSyEVPn8riaiLGY65UycAtDV1c7VcUoooJcAHu6zFuAtN1SDdO+DAJtcwCGQ70+yytXZFYmjTwjkGwMh5d5VlFYrSCc5CZSU5hMD0lr98gS1poC0VlJux7QCYqqN1MLsov/BRrR2fpO/N8NSQVcJA7AwfnlardYrKGWAFvgPaC0JdVIGCB001n3qYhtq4F3U8f4/6vjim1smHEtwEQC6vk6O9X66jqx35Yol6D0pIPRgg+kn+cFy9dCcFOZjTYQempNgUM8YNQRCD+6ZPqgnBsTuk6Axuwk8qBOhx7/cKD2hRPw58YBcATp9rFdQ8gCzgd4KdUp7nM7SmwAAAABJRU5ErkJggg=="/></td>
+                <td>{this.state.edit  && <i   className="fa fa-edit" aria-hidden="true"  ></i>}{this.editRender(index)}</td>
                 <td className="mail_list_icon"><img alt="send" id={index} onClick={this.changeDeleteConfirm} aria-hidden="true" className="icon icons8-Delete" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABH0lEQVRoQ+2Z3Q2CQBCEoQJL0BLsREvQDizFDrQE6cQStAOtQPcMPGnCfHhgwDHhybnd+dnbkFAWI/+VI+dfWMCvE3QCU0tgE4IOLaKO8f82l/CcI6SQb3hnE0EEPHK5JtaRuEmguqEFiM43MMlcCTSVBKCBw8BJAsMwgl26COj7MiNOCDzQXUCcENgCtPlGpiKwE3AC7w54hLSpQChkKgL7EmtBIFMR2Ak4Aa/RlwN+nW65CmixILC3kLeQt5C3kHIL0GJBYG8hxf+Cfbf7ywRuYeRMMxOjrnFiQU51SeAUDVakCcBWgV0DPJu3unBy6NxDCveouYzn0reAVD+J2NcN56ThB2wam2TIjpJPtbqM0Jd88x63gLx+8mqjT+AJZMctMUe7N34AAAAASUVORK5CYII="/></td>
             </tr>
         })
@@ -110,7 +157,6 @@ class ChooseMailingList extends Component {
                 </div>
                 {this.deleteConfirmRender()}
                 {this.sendRender()}
-              
             </div>
         )   
     }

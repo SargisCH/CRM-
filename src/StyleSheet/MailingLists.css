@@ -1,6 +1,6 @@
 .mailing_list_table,.mailLingListSelection {
-	width: 100%;
-   	height: 100%;
+	width: 100%; 	
+    height: 100%;
     box-sizing: border-box;
 	padding:1.1%;
 	overflow: auto;
@@ -75,7 +75,7 @@
     border-radius: .1rem;
 	border: 0;
 	cursor:pointer;
-	width: 80px;
+	width: 150px;
 	margin: 1%;
 	padding: 1%;
 }
@@ -96,7 +96,6 @@
         width: 95%;
         height: 40%;
         margin-left: 2%;
-        
 	}
     .options td{
         padding: 1%;
@@ -108,4 +107,10 @@
 }
 .emptyEmailLists{
     text-align: center
+}
+#new_name{
+    margin-left: 20px;
+}
+#editForm{
+    height: 200px;
 }

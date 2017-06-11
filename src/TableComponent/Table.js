@@ -194,14 +194,13 @@ class Table extends Component{
 						throw new Error(res.Message)
 					})
 				}
-			}).then(res => {this.setState({successMessage: res})})
+			}).then(res => {this.setState({successMessage: res, requestLoad:false})})
 			.catch(error =>{
-				this.setState({successMessage: error.message})
+				this.setState({successMessage: error.message, requestLoad:false})
 			})
 			this.changeUpload();
 			this.setState({file:true})
 		}
-		this.setState({requestLoad:false})
 	}		
 	addContactsFile(){
 		this.setState({requestLoad:true})
@@ -356,10 +355,10 @@ class Table extends Component{
 	}
 												/*Save New Contacts*/
 	savedData(obj){
-		this.setState({data:obj, successMessage: "New Contatcts is saved"})
+		this.setState({data:obj, successMessage: "Contact Seccfully Updated"})
 	}
 	getNewContacts(newContactobj){
-		this.setState({data:newContactobj, successMessage:"New Contacts is added"})
+		this.setState({data:newContactobj, successMessage:"New Contatcts is saved"})
 	}
 													/*Add to mailing List*/
 	changeMailingListShow(){
